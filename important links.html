@@ -198,6 +198,10 @@
                 "פטורים"
             ];
 
+            // randomise background hue:
+            const newhue = Math.floor(Math.random() * 360);
+            document.getElementsByClassName('bg')[0].style.filter = `invert(100%) hue-rotate(${newhue}deg)`;
+
             const length = addresses.length;
             const container = document.getElementById('container');
             container.innerHTML = "";

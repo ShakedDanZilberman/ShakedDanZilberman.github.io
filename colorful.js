@@ -140,7 +140,7 @@ function colorDistance(color1, color2) {
     // Here one can also adjust the constants.
     if (Math.abs(hue1 - hue2) < 20) factorAccumulator *= 0.5;
     if (Math.abs(hue1 - hue2) > 200) factorAccumulator *= 1.5;
-    if (Math.abs(bright1 - bright2) > 200) factorAccumulator *= 1.1;
+    if (Math.abs(bright1 - bright2) > 150) factorAccumulator *= 1.1;
     return euclideanDistance(color1, color2) * factorAccumulator;
 }
 

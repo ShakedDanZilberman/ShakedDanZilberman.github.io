@@ -41,7 +41,7 @@
             div.blob {
                 width: 14vw;
                 height: 14vw;
-                border: .1vh solid gray;
+                border: .3vh solid gray;
                 backdrop-filter: brightness(0.9);
                 padding: 1vw;
                 display: flex;
@@ -130,7 +130,7 @@
 
             div#all {
                 cursor: pointer;
-                backdrop-filter: brightness(0.8);
+                backdrop-filter: brightness(0.7);
                 display: flex;
                 align-content: stretch;
                 align-items: center;
@@ -141,6 +141,17 @@
                 font-size: 1.5vw;
                 font-weight: bold;
                 box-shadow: inset 0 0 10px 10px white;
+            }
+
+            @media only screen and (max-width: 930px) {
+                div.blob {
+                    width: 200px;
+                    height: 200px;
+                }
+
+                div.blob>h1 {
+                    font-size: 50px;
+                }
             }
         </style>
     </head>

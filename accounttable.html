@@ -101,7 +101,7 @@
                 align-items: center;
             }
 
-            img#favicon {
+            img.favicon {
                 height: 5vw;
                 width: 5vw;
                 margin-right: 2vw;
@@ -132,11 +132,22 @@
                 font-weight: bold;
                 box-shadow: inset 0 0 10px 10px white;
             }
+
+            img.bg {
+                position: absolute;
+                width: auto;
+                height: 100%;
+                filter: saturate(5.5) blur(50px) opacity(0.5);
+                top: 50%;  
+                left: 50%; 
+                transform: translate(-50%, -50%);
+            }
         </style>
     </head>
 
     <body>
-        <h3><img id="favicon"><i id="title">no website</i></h3>
+        <img src="" alt="" name="favicon" class="bg">
+        <h3><img name="favicon" class="favicon"><i id="title">no website</i></h3>
         <div class="container" id="container"></div>
         <div class="all">
             <div id="all" onclick="openAll();">
@@ -182,7 +193,7 @@
             }
 
             const title = document.getElementById('title');
-            const img = document.getElementById('favicon');
+            const favicons = document.getElementsByName('favicon');
 
             handle_title();
 
@@ -242,7 +253,9 @@
             function handle_title() {
                 var a = window.location.search.substring(1); // removes '?'
                 // img.src = "https://s2.googleusercontent.com/s2/favicons?sz=64&domain_url=" + a;
-                img.src = `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${a}&size=64`;
+                for (const img of favicons) {
+                    img.src = `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${a}&size=64`;
+                }
                 a = a.split('/')[2]; // returns main part (domain name)
                 a = a.split('.'); // splits to subdomain, domain, TLD
                 a.pop(); // removes TLD
@@ -253,7 +266,7 @@
                 if (title.innerText.toLowerCase() == "Google Classroom".toLowerCase()) {
                     img.src = "https://ssl.gstatic.com/classroom/ic_product_classroom_32.png";
                 }
-                document.getElementsByTagName('head')[0].innerHTML += `<link rel="icon" href="${img.src}">`; // favicon of shortcut matches dest site.
+                document.getElementsByTagName('head')[0].innerHTML += `<link rel="icon" href="${favicons[0].src}">`; // favicon of shortcut matches dest site.
 
                 document.title = a.join(' ').capitalise() + " Account Selector"; // The title is something like "Google Calendar Account Selector"
 

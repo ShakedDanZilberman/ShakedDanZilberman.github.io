@@ -6,137 +6,15 @@ const GREYSCALE_READABILITY = 120; // How dark need a background be, to necessit
 const IGNORE_FILLERS = 2; // Ignore the whites and blacks of an image. Larger means ignore more colours.
 const SIGNIFICANT_PERCENT = 0.015; // How much should a colour appear in an image, so that it can be considered one of its colours? Lower means less occurrences.
 
-String.prototype.capitalise = function () {
-    return this.split(" ").map(function (ele) { return ele[0].toUpperCase() + ele.slice(1).toLowerCase(); }).join(" ");
-};
-
-var addresses, images;
-const name = window.location.hash;
-
-if (name != '') {
-    var parts = name.match(/[A-Z][a-z]+|[0-9]+/g);
-    var nameParts = [];
-    var zeros = '';
-    for (let part of parts) {
-        if (part[0] == '0') {
-            zeros += part;
-        } else {
-            nameParts.push(part.toLowerCase());
-        }
-    }
-    addresses = [
-        nameParts.join('.') + '.' + zeros + '45@gmail.com',
-        nameParts.join('.') + "@mail.huji.ac.il"
-    ];
-    images = [
-        "https://upload.wikimedia.org/wikipedia/commons/e/ec/%D7%A1%D7%9E%D7%9C_%D7%AA%D7%9C%D7%A4%D7%99%D7%95%D7%AA.JPG",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hebrew_University_Logo.svg/130px-Hebrew_University_Logo.svg.png"
-    ];
-} else {
-    addresses = ["first_person@gmail.com", "second_person@gmail.com", "third_person@gmail.com", "forth_person@gmail.com"]
-    images = [
-        "https://picsum.photos/200",
-        "https://picsum.photos/201",
-        "https://picsum.photos/202",
-        "https://picsum.photos/203"
-    ];
-}
-
-const title = document.getElementById('title');
-const img = document.getElementById('favicon');
-
-handle_title();
-
-const length = addresses.length;
-const container = document.getElementById('container');
-container.innerHTML = "";
-
-for (let i = 0; i < length; i++) {
-    container.innerHTML += `
-        <div class="blob" onclick="clicked(${i});">
-            <h1>User <i>${i}</i></h1>
-            <img src="${images[i]}" alt="" onload="setTimeout(taintParent, 200, this)">
-            <h2>${addresses[i]}</h2>
-        </div>
-    `;
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function clicked(i) {
-    if (malfromed_link()) return;
-
-    var result = window.location.search.replace(/0/, i);
-    if (result.charAt(0) == '?') result = result.substring(1);
-    console.log(result);
-    window.location.assign(result);
-}
-
-function openAll() {
-    if (malfromed_link()) return;
-
-    function atindex(i) {
-        var result = window.location.search.replace(/0/, i);
-        if (result.charAt(0) == '?') result = result.substring(1);
-        console.log(result);
-        return result
-    }
-
-    for (var i = length - 2; i >= 0; i--) {
-        openInNewTab(atindex(i));
-    }
-
-    window.location.replace(atindex(length - 1));
-
-}
-
-function openInNewTab(href) {
-    Object.assign(document.createElement('a'), {
-        target: '_blank',
-        rel: 'noopener noreferrer',
-        href: href,
-    }).click();
-}
-
-function handle_title() {
-    var a = window.location.search.substring(1); // removes '?'
-    // img.src = "https://s2.googleusercontent.com/s2/favicons?sz=64&domain_url=" + a;
-    img.src = `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${a}&size=64`;
-    a = a.split('/')[2]; // returns main part (domain name)
-    a = a.split('.'); // splits to subdomain, domain, TLD
-    a.pop(); // removes TLD
-    a.reverse(); // reverses array, so that the host comes before the subdomain
-    title.innerText = a.join(' '); // The h3 is something like "Google Calendar".
-
-    // Google Classroom requires login to display the correct icon, so here's a workaround:
-    if (title.innerText.toLowerCase() == "Google Classroom".toLowerCase()) {
-        img.src = "https://ssl.gstatic.com/classroom/ic_product_classroom_32.png";
-    }
-    document.getElementsByTagName('head')[0].innerHTML += `<link rel="icon" href="${img.src}">`; // favicon of shortcut matches dest site.
-
-    document.title = a.join(' ').capitalise() + " Account Selector"; // The title is something like "Google Calendar Account Selector"
-
-    // taintParent(img); // won't work because Google isn't permissible enough on its images
-}
-
-function malfromed_link() {
-    if (window.location.search == "") {
-        console.error("Empty query");
-        window.alert("Malformed link...");
-        return true;
-    }
-    else if (!window.location.search.includes('0')) {
-        console.error("0-less query"); // query must contain '0' so an account can be chosen.
-        window.alert("Malformed link...");
-        return true;
-    }
-    return false;
-}
-
 function taintParent(x) {
-    x.crossOrigin = "Anonymous"; // workaround for _some_ images whose crosssite policy is not good.
+    try {
+        x.crossOrigin = "Anonymous"; // workaround for _some_ images whose crosssite policy is not good.
+    } catch (error) {
+        console.error(error);
+        x.src = "https://picsum.photos/210";
+        setTimeout(taintParent, 200, this);
+        return;
+    }
 
     // create a virtual canvas and paint the image onto it.
     const canvas = document.createElement("canvas");
@@ -258,12 +136,12 @@ function colorDistance(color1, color2) {
     const hue2 = hue(r2, g2, b2);
     const bright1 = 0.2126 * r1 + 0.7152 * g1 + 0.0722 * b1;
     const bright2 = 0.2126 * r2 + 0.7152 * g2 + 0.0722 * b2;
-    let factor = 1;
+    let factorAccumulator = 1;
     // Here one can also adjust the constants.
-    if (Math.abs(hue1 - hue2) < 20) factor *= 0.5;
-    if (Math.abs(hue1 - hue2) > 200) factor *= 1.5;
-    if (Math.abs(bright1 - bright2) > 200) factor *= 1.1;
-    return euclideanDistance(color1, color2) * factor;
+    if (Math.abs(hue1 - hue2) < 20) factorAccumulator *= 0.5;
+    if (Math.abs(hue1 - hue2) > 200) factorAccumulator *= 1.5;
+    if (Math.abs(bright1 - bright2) > 200) factorAccumulator *= 1.1;
+    return euclideanDistance(color1, color2) * factorAccumulator;
 }
 
 function extractDistinctColors(imageData, avg, N, threshold) {
@@ -305,3 +183,4 @@ function extractDistinctColors(imageData, avg, N, threshold) {
     // 3) Extract the first N colors.
     return sortedColors.slice(0, N).map(item => item.color);
 }
+

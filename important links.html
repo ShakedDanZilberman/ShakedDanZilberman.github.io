@@ -217,8 +217,8 @@
 
             for (let i = 0; i < length; i++) {
                 var name = link_to_title(addresses[i], i);
-                var fontSize = name.length > 15 ? "1.2vw" : "1.8vw";
-                var linkFontSize = addresses[i].length < 27 ? "1.2vw" : addresses[i].length < 34 ? "1vw" : "0.7vw";
+                var fontSize = name.length > 14 ? "19px" : "40px";
+                var linkFontSize = addresses[i].length < 27 ? "20px" : addresses[i].length < 34 ? "15px" : "10px";
                 container.innerHTML += `
                     <div class="blob" onclick="clicked(${i});">
                         <h1 style="font-size: ${fontSize}">${name}</h1>

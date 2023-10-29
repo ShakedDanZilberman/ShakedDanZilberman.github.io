@@ -1,10 +1,10 @@
 // Customisation and Thresholds
-const SCALE = 8; // downscale the image for quicker performence. Larger means faster.
+const SCALE = 8.6; // downscale the image for quicker performence. Larger means faster.
 const COLOR_COUNT = 4; // max colours in a single blob.
 const DISTINCT_THRESHOLD = 100; // What distance (in colour-space) between two colours makes them distinct from each other?
 const GREYSCALE_READABILITY = 120; // How dark need a background be, to necessitate white text atop it? Smaller means less contrast.
 const IGNORE_FILLERS = 2; // Ignore the whites and blacks of an image. Larger means ignore more colours.
-const SIGNIFICANT_PERCENT = 0.015; // How much should a colour appear in an image, so that it can be considered one of its colours? Lower means less occurrences.
+const SIGNIFICANT_PERCENT = 0.02; // How much should a colour appear in an image, so that it can be considered one of its colours? Lower means less occurrences.
 
 function taintParent(x) {
     try {

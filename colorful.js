@@ -180,6 +180,8 @@ function extractDistinctColors(imageData, avg, N, threshold) {
     .map(({ color, count }) => ({ color, count, distance: colorDistance(color, avg) }))
     .sort((a, b) => b.distance - a.distance);
 
+    console.log(sortedColors)
+
     // 3) Extract the first N colors.
     return sortedColors.slice(0, N).map(item => item.color);
 }

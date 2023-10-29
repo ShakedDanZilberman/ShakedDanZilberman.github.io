@@ -19,8 +19,8 @@ function taintParent(x) {
     // create a virtual canvas and paint the image onto it.
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = x.width;
-    canvas.height = x.height;
+    canvas.width = x.width / SCALE;
+    canvas.height = x.height / SCALE;
     ctx.drawImage(x, 0, 0, x.width / SCALE, x.height / SCALE);
     
     // read the image data from the canvas.

@@ -16,7 +16,7 @@
             }
 
             .bg {
-                filter: invert(100%);
+                filter: invert(100%) blur(3px);
                 position: absolute;
                 top: 0;
                 right: 0;
@@ -210,7 +210,7 @@
 
             // randomise background hue:
             const newhue = Math.floor(Math.random() * 360);
-            document.getElementsByClassName('bg')[0].style.filter = `invert(100%) hue-rotate(${newhue}deg)`;
+            document.getElementsByClassName('bg')[0].style.filter = `invert(100%) hue-rotate(${newhue}deg) blur(3px)`;
 
             const length = addresses.length;
             const container = document.getElementById('container');

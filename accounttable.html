@@ -264,7 +264,9 @@
 
                 // Google Classroom requires login to display the correct icon, so here's a workaround:
                 if (title.innerText.toLowerCase() == "Google Classroom".toLowerCase()) {
-                    img.src = "https://ssl.gstatic.com/classroom/ic_product_classroom_32.png";
+                    for (const img of favicons) {
+                        img.src = "https://ssl.gstatic.com/classroom/ic_product_classroom_32.png";
+                    }
                 }
                 document.getElementsByTagName('head')[0].innerHTML += `<link rel="icon" href="${favicons[0].src}">`; // favicon of shortcut matches dest site.
 

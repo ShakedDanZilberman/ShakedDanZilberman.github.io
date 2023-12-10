@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/256/6436/6436438.png" type="image/x-icon">
+    <title>Talpiot Bingo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            column-gap: 15px;
+            row-gap: 10px;
+            margin: 20px;
+        }
+
+        .bg {
+            filter: invert(100%) blur(3px);
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -3;
+        }
+
+        .transparent {
+            z-index: -2;
+            opacity: 0.2;
+            filter: invert(0%) blur(3px);
+            width: 500px;
+            height: 500px;
+            margin-top: -250px; /* Half the height */
+            margin-left: -250px; /* Half the width */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        /* Style for the checkbox */
+        #container input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 3px solid #000000; /* Black border */
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            top: -15px;
+            left: -3px;
+        }
+
+        /* Style for the tick inside the checkbox */
+        #container input[type="checkbox"]:checked {
+            background-color: #4CAF50; /* Green fill */
+        }
+
+        h3 {
+            top: 5%;
+            text-align: center;
+            width: 100%;
+            font-size: 5vw;
+            margin: 0;
+            z-index: 1;
+            text-transform: capitalize;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h4 {
+            margin: 10px;
+            font-size: 3vw;
+            text-transform: capitalize;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <img src="talpiot_bg.jpg" alt="" class="bg">
+    <img src="https://upload.wikimedia.org/wikipedia/he/1/14/Minecraft_Logo.png" alt="" class="bg transparent">
+    <h3><i id="title">How many can you do?</i></h3>
+    <h4>Talpiot<sup>45</sup></h4>
+    <div class="container" id="container">
+        <img src="https://skinmc.net/achievement/9/Degreeist/Have+a+midday+nap" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/37/Shower/In+Maison+de+France" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/10/Oss/Oss+on+Orian" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/26/Committee/Go+through+a+committee" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/32/Shatz/Say+%22shatz%22+to+a+44er" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/3/Shatz/Say+%22shatz%22+to+a+43er" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/24/Carton+Man/Be+thrown+into+Cartonia" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/16/Shin+Splint/Cured+From+Shin+Splint" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/34/Hadul/Be+called+%22incompetent%22" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/19/Semester+Master/Do+all+exercises" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/1/Course+Curse/Do+no+exercises" alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/17/Sergeant+Crate/Open+it." alt="Please refresh the page" />
+        <img src="https://skinmc.net/achievement/23/Uno+Reverse/Tell+Jack+to+pay+50" alt="Please refresh the page" />
+        <!-- <img src="https://skinmc.net/achievement/19/Uno+Reverse/Teach+Jorge+for+5+min" alt="Please refresh the page" /> -->
+        
+
+    </div>
+
+    <script>
+        // randomise background hue:
+        const newhue = Math.floor(Math.random() * 360);
+        document.getElementsByClassName('bg')[0].style.filter = `invert(100%) hue-rotate(${newhue}deg) blur(3px)`;
+    
+        const container = document.getElementById('container');
+        const images = container.getElementsByTagName('img');
+    
+        for (const image of images) {
+            // Create a new div for each image
+            const newDiv = document.createElement('div');
+    
+            // Create a checkbox
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+    
+            // Append the checkbox to the new div
+            newDiv.appendChild(checkbox);
+    
+            // Append the original image to the new div
+            newDiv.appendChild(image.cloneNode(true));
+    
+            // Replace the original image with the new div
+            container.replaceChild(newDiv, image);
+    
+            // Add event listener to the checkbox
+            checkbox.addEventListener('click', function () {
+                // Toggle transparency and grayscale on image click
+                const originalImage = this.nextElementSibling;
+                originalImage.style.opacity = originalImage.style.opacity === '0.5' ? '1' : '0.5';
+                originalImage.style.filter = originalImage.style.filter === 'grayscale(80%)' ? 'grayscale(0%)' : 'grayscale(80%)';
+            });
+        }
+    </script>
+    
+</body>
+</html>

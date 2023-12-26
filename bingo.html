@@ -156,7 +156,9 @@
 
         @keyframes fade {
 
-            0%, 25%, 100% {
+            0%,
+            25%,
+            100% {
                 opacity: 0;
             }
 
@@ -212,34 +214,64 @@
             bg.style.filter = `invert(100%) hue-rotate(${newhue}deg) blur(3px)`;
         }
 
-        const container = document.getElementById('container');
-        const images = container.getElementsByTagName('img');
+        document.addEventListener('DOMContentLoaded', function () {
+    const container = document.getElementById('container');
+    const images = container.getElementsByTagName('img');
 
-        for (const image of images) {
-            // Create a new div for each image
-            const newDiv = document.createElement('div');
+    // Function to update image appearance based on its stored state
+    function updateImageAppearance(image, checkbox) {
+        const imageState = localStorage.getItem(image.src) || '0';
 
-            // Create a checkbox
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
+        // Set initial appearance based on stored state
+        image.style.opacity = imageState === '1' ? '0.5' : '1';
+        image.style.filter = imageState === '1' ? 'grayscale(80%)' : 'grayscale(0%)';
 
-            // Append the checkbox to the new div
-            newDiv.appendChild(checkbox);
+        // Set checkbox state based on stored state
+        checkbox.checked = imageState === '1';
+    }
 
-            // Append the original image to the new div
-            newDiv.appendChild(image.cloneNode(true));
+    for (const image of images) {
+        // Create a new div for each image
+        const newDiv = document.createElement('div');
 
-            // Replace the original image with the new div
-            container.replaceChild(newDiv, image);
+        // Create a checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
 
-            // Add event listener to the checkbox
-            checkbox.addEventListener('click', function () {
-                // Toggle transparency and grayscale on image click
-                const originalImage = this.nextElementSibling;
-                originalImage.style.opacity = originalImage.style.opacity === '0.5' ? '1' : '0.5';
-                originalImage.style.filter = originalImage.style.filter === 'grayscale(80%)' ? 'grayscale(0%)' : 'grayscale(80%)';
-            });
-        }
+        // Append the checkbox to the new div
+        newDiv.appendChild(checkbox);
+
+        // Append the original image to the new div
+        const newimg = image.cloneNode(true)
+        newDiv.appendChild(newimg);
+
+        // Attach event listener to handle image load
+        newimg.addEventListener('load', function () {
+            updateImageAppearance(newimg, checkbox);
+        });
+
+        // Attach event listener to the checkbox
+        checkbox.addEventListener('click', function () {
+            // Toggle transparency and grayscale on checkbox click
+            const isChecked = this.checked;
+            const imageSrc = newimg.src;
+
+            // Update image appearance
+            newimg.style.opacity = isChecked ? '0.5' : '1';
+            newimg.style.filter = isChecked ? 'grayscale(80%)' : 'grayscale(0%)';
+
+            console.log(newimg)
+
+            // Update localStorage state
+            localStorage.setItem(imageSrc, isChecked ? '1' : '0');
+        });
+
+        // Replace the original image with the new div
+        container.replaceChild(newDiv, image);
+    }
+});
+
+
     </script>
 
 </body>

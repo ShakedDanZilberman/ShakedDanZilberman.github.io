@@ -105,6 +105,25 @@
                 z-index: -1;
             }
 
+            .disabled {
+                cursor: not-allowed !important;
+            }
+
+            /* diagonal red line on the blob */
+            .disabled::after {
+                content: "";
+                position: absolute;
+                background: linear-gradient(45deg, red, red);
+                border: black 1px solid;
+                opacity: 0.9;
+                z-index: 1;
+                transform: rotate(45deg);
+                width: 100%;
+                height: 0.3vw;
+                top: 50%;
+                left: 0;
+            }
+
             h3 {
                 top: 5%;
                 text-align: center;
@@ -181,12 +200,14 @@
                 {
                     address: "https://moodle4.cs.huji.ac.il/hu23/course/view.php?id=77910",
                     image: "https://cdn-icons-png.flaticon.com/512/1791/1791305.png",
-                    name: "מכניקה"
+                    name: "מכניקה",
+                    disabled: true
                 },
                 {
                     address: "https://moodle4.cs.huji.ac.il/hu23/course/view.php?id=6710101",
                     name: "אינטרו",
-                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/800px-Python-logo-notext.svg.png"
+                    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/800px-Python-logo-notext.svg.png",
+                    disabled: true
                 },
                 {
                     name: "מת\"פ 1",
@@ -196,7 +217,8 @@
                 {
                     name: "אינפי 1",
                     address: "https://moodle4.cs.huji.ac.il/hu23/course/view.php?id=8013101",
-                    image: "https://static.vecteezy.com/system/resources/thumbnails/002/583/092/small/math-education-school-science-calculus-diagram-analysis-line-and-fill-style-icon-free-vector.jpg"
+                    image: "https://static.vecteezy.com/system/resources/thumbnails/002/583/092/small/math-education-school-science-calculus-diagram-analysis-line-and-fill-style-icon-free-vector.jpg",
+                    disabled: true
                 },
                 {
                     name: "לינארית 1",
@@ -206,7 +228,8 @@
                 {
                     address: "https://moodle4.cs.huji.ac.il/hu23/course/view.php?id=77110",
                     image: "https://cdn-icons-png.flaticon.com/512/7918/7918229.png",
-                    name: "מעבדה"
+                    name: "מעבדה",
+                    disabled: true
                 },
                 {
                     address: "https://moodle4.cs.huji.ac.il/hu23/my/",
@@ -249,8 +272,9 @@
                 var name = link_to_title(addresses[i], i);
                 var fontSize = name.length > 14 ? "17px" : name.length > 9 ? "35px" : "40px";
                 var linkFontSize = addresses[i].length < 29 ? "20px" : addresses[i].length < 41 ? "12px" : "10px";
+                var disabled = data[i].disabled ? "disabled" : "";
                 container.innerHTML += `
-                    <div class="blob" onclick="clicked(${i});">
+                    <div class="blob ${disabled}" onclick="clicked(${data[i].disabled ? -1 : i});">
                         <h1 style="font-size: ${fontSize}">${name}</h1>
                         <img src="${images[i]}" alt="" onload="setTimeout(taintParent, 200, this)">
                         <h2 style="font-size: ${linkFontSize}">${addresses[i]}</h2>
@@ -264,6 +288,10 @@
 
             function clicked(i) {
                 if (malfromed_link()) return;
+
+                if (i == -1) {
+                    return;
+                }
 
                 window.location.assign(addresses[i]);
             }

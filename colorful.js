@@ -15,7 +15,6 @@ function taintParent(x) {
         setTimeout(taintParent, 200, this);
         return;
     }
-
     // create a virtual canvas and paint the image onto it.
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");

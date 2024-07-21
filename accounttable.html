@@ -268,6 +268,14 @@
                         img.src = "https://ssl.gstatic.com/classroom/ic_product_classroom_32.png";
                     }
                 }
+
+                // Similarly for Google Sheets:
+                if (title.innerText.toLowerCase() == "Google Sheets".toLowerCase()) {
+                    for (const img of favicons) {
+                        img.src = "https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico";
+                    }
+                }
+                
                 document.getElementsByTagName('head')[0].innerHTML += `<link rel="icon" href="${favicons[0].src}">`; // favicon of shortcut matches dest site.
 
                 document.title = a.join(' ').capitalise() + " Account Selector"; // The title is something like "Google Calendar Account Selector"

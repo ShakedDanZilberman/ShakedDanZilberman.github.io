@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3399/3399435.png" type="image/x-icon">
+    <title>Falafel Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #000000;
+            padding: 10px;
+            margin: 0;
+            font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+        }
+
+        h3 {
+            text-align: center;
+            padding: 10px;
+            margin: 0;
+            font-family: 'Consolas', 'Trebuchet MS', Helvetica, Arial, sans-serif;
+            font-size: 50px;
+            margin-bottom: 40px;
+        }
+
+        h3 img {
+            width: 90px;
+            height: 150px;
+            vertical-align: bottom;
+            /* Trim the top 2 thirds, leave only the bottom third */
+            clip-path: inset(60% 20% 0% 20%);
+            filter: grayscale(100%) invert() brightness(1.5);
+            /* This image should appear over the text */
+            position: relative;
+            top: 0px;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #fff;
+            color: #000;
+            border: 0.5px dashed #222;
+            padding: 10px;
+            margin-top: 50px;
+            position: relative;
+            bottom: 0;
+            width: 95%;
+            left: 1%;
+            font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+        }
+
+        .falafels {
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .falafels > span {
+            width: 100px;
+            height: 245px;
+            padding: 0px 0px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+        }
+        
+        .falafel1.land {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/IDF_rav_seren.svg/267px-IDF_rav_seren.svg.png?20091119193821);
+        }
+
+        .falafel1.air {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/IDF_rav_seren_silver-2.svg/266px-IDF_rav_seren_silver-2.svg.png);
+        }
+
+        .falafel1.sea {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/IDF_rav_seren_gold-2.svg/266px-IDF_rav_seren_gold-2.svg.png?20110427170257);
+        }
+
+        .falafel2.land {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/IDF_sgan_aluf.svg/640px-IDF_sgan_aluf.svg.png);
+        }
+
+        .falafel2.air {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/IAF_sgan_aluf.svg/640px-IAF_sgan_aluf.svg.png);
+        }
+
+        .falafel2.sea {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/IDF_Navy_sgan_aluf.png/640px-IDF_Navy_sgan_aluf.png);
+        }
+
+        .falafel3.land {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/IDF_aluf_mishne.svg/640px-IDF_aluf_mishne.svg.png);
+        }
+
+        .falafel3.air {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/IAF_aluf_mishne.svg/640px-IAF_aluf_mishne.svg.png);
+        }
+
+        .falafel3.sea {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/IDF_Navy_aluf_mishne.png/640px-IDF_Navy_aluf_mishne.png);
+        }
+
+        .falafel4.land {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/IDF_tat_aluf.svg/640px-IDF_tat_aluf.svg.png);
+        }
+
+        .falafel4.air {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/IAF_tat_aluf.svg/640px-IAF_tat_aluf.svg.png);
+        }
+
+        .falafel4.sea {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/IDF_Navy_tat_aluf.png/640px-IDF_Navy_tat_aluf.png);
+        }
+
+        .falafel5.land {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/IDF_aluf.svg/640px-IDF_aluf.svg.png);
+        }
+
+        .falafel5.air {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/IAF_aluf.svg/640px-IAF_aluf.svg.png);
+        }
+
+        .falafel5.sea {
+            background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/IDF_Navy_aluf.png/640px-IDF_Navy_aluf.png);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Falafel Project – Talpiot<sup>45</sup> – 1<sup>st</sup> Year</h1>
+
+    <div style="text-align: center; display: flex;" class="falafels">
+        <!-- <span class="falafel1 land"></span>
+        <span class="falafel1 air"></span>
+        <span class="falafel1 sea"></span>
+        
+        <span class="falafel2 land"></span>
+        <span class="falafel2 air"></span>
+        <span class="falafel2 sea"></span>
+        
+        <span class="falafel3 land"></span>
+        <span class="falafel3 air"></span>
+        <span class="falafel3 sea"></span>
+
+        <span class="falafel4 land"></span>
+        <span class="falafel4 air"></span>
+        <span class="falafel4 sea"></span>
+        
+        <span class="falafel5 land"></span>
+        <span class="falafel5 air"></span>
+        <span class="falafel5 sea"></span> -->
+    </div>
+
+    <footer>
+        <h3>
+        #<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/IDF_rav_seren_silver-2.svg/266px-IDF_rav_seren_silver-2.svg.png" alt="Falafel">= <i id="total">0</i>
+        </h3>
+        By Shaked Zilberman
+    </footer>
+
+    <script>
+        const data = [
+            {counts: [1, 0, 0, 0, 0]},
+            {counts: [2, 0, 0, 0, 0]},
+            {counts: [3, 1, 0, 0, 0], type: 'air'},
+            {counts: [7, 5, 3, 1, 0]},
+            {counts: [0, 0, 0, 1, 0]},
+            {counts: [1, 0, 0, 0, 0], type: 'air'},
+            {counts: [2, 0, 0, 0, 0]},
+            {counts: [2, 0, 0, 0, 0]},
+            {counts: [3, 0, 0, 0, 0]},
+            {counts: [0, 0, 0, 0, 1], type: 'air'},
+            {counts: [0, 2, 0, 0, 0]},
+            {counts: [0, 1, 1, 0, 0]},
+            {counts: [1, 0, 0, 0, 0]},
+            {counts: [0, 1, 0, 0, 1], type: ['sea', 'land']},
+            {counts: [1, 0, 0, 0, 0]},
+            {counts: [2, 0, 2, 0, 0], type: 'sea'},
+            {counts: [1, 0, 0, 0, 0]},
+            {counts: [0, 0, 0, 0, 1]},
+            {counts: [1, 0, 1, 0, 0], type: ['land', 'air']}
+        ];
+        // Default type is land
+
+        const falafels = document.querySelectorAll('.falafels')[0];
+        let total = 0;
+        for (let datum of data) {
+            console.log('Processing datum: ', datum);
+            if (!datum.counts) {
+                continue;
+            }
+            if (datum.counts.length !== 5) {
+                console.error('Invalid data: ', datum);
+                continue;
+            }
+            let sumcounts = datum.counts.reduce((a, b) => a + b, 0);
+            if (Array.isArray(datum.type)) {
+                for (let type of datum.type) {
+                    if (type !== 'land' && type !== 'air' && type !== 'sea') {
+                        console.error('Unknown type in array: ', datum);
+                        continue;
+                    }
+                }
+                if (sumcounts !== datum.type.length) {
+                    console.error('Type and counts don\'t match: ', datum);
+                    continue;
+                }
+            } else if (datum.type && datum.type !== 'land' && datum.type !== 'air' && datum.type !== 'sea') {
+                console.error('Invalid type: ', datum);
+                continue;
+            }
+            let type = datum.type;
+            console.log(type, sumcounts)
+            if (type == undefined) {
+                type = 'land';
+            }
+            // If it is not an array, then it is a string, and we can convert it to an array with sum(counts) elements
+            if (!Array.isArray(datum.type)) {
+                type = new Array(sumcounts).fill(type);
+            }
+            let counts = datum.counts;
+            let typeiterator = 0;
+            for (let i = 0; i < counts.length; i++) {
+                let count = counts[i];
+                if (count == 0) {
+                    continue;
+                }
+                let number = i + 1;
+                let falafeltype = type[typeiterator++];
+                for (let j = 0; j < count; j++) {
+                    addFalafel(falafels, falafeltype, number);
+                }
+            }
+        }
+        console.log("Total: " + total);
+        document.getElementById('total').innerText = total;
+
+        function addFalafel(falafels, type, number) {
+            // If the input is for example air, 2
+            // Then add a falafel with class falafel3 and class air
+            // if (type == undefined) {
+            //     type = 'land';
+            // }
+            total += number;
+            console.log(`Adding falafel${number} with type ${type}`);
+            let falafel = document.createElement('span');
+            falafel.classList.add(`falafel${number}`);
+            falafel.classList.add(type);
+            falafels.appendChild(falafel);
+        }
+    </script>
+</body>
+</html>

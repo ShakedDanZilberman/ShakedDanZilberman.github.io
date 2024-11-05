@@ -273,7 +273,7 @@
 
         for (let i = 0; i < length; i++) {
             var name = link_to_title(addresses[i], i);
-            var fontSize = name.length > 14 ? "17px" : name.length > 9 ? "35px" : "40px";
+            var fontSize = name.length > 16 ? "17px" : name.length > 9 ? "35px" : "40px";
             var linkFontSize = addresses[i].length < 29 ? "20px" : addresses[i].length < 41 ? "12px" : "10px";
             var disabled = data[i].disabled ? "disabled" : "";
             container.innerHTML += `

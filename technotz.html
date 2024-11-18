@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <title>From Linear Algebra to the iPhone</title>
+        <style media="screen">
+            body {
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            div.container {
+                background-color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                min-height: 100vh;
+                overflow: hidden;
+                gap: 5vw;
+                flex-direction: row;
+            }
+
+            div.blob {
+                width: 18vw;
+                height: 18vw;
+                border: .1vh solid gray;
+                backdrop-filter: brightness(0.9);
+                padding: 1vw;
+                display: flex;
+                align-content: stretch;
+                align-items: center;
+                flex-direction: column;
+                justify-content: space-around;
+                border-radius: 5%;
+                cursor: pointer;
+            }
+
+            div.blob>h1,
+            div.blob>h2 {
+                margin: 0;
+                width: 100%;
+            }
+
+            div.blob>h1 {
+                font-size: 3vw;
+            }
+
+            div.blob>h2 {
+                font-size: 1.2vw;
+                overflow: hidden;
+                font-weight: normal;
+                font-style: italic;
+            }
+
+            div.blob>h1>i {
+                font-family: "Consolas", monospace;
+            }
+
+            i {
+                font-style: normal;
+            }
+
+            div.blob>img {
+                width: 60%;
+                height: auto;
+                border-radius: 50%;
+                max-height: 150px;
+                width: auto;
+                max-width: 250px;
+            }
+
+            .blob {
+                position: relative;
+            }
+
+            .blob::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+            }
+
+            h3 {
+                position: absolute;
+                top: 5%;
+                text-align: center;
+                width: 100%;
+                font-size: 5vw;
+                margin: 0;
+                z-index: 1;
+                text-transform: capitalize;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            img.favicon {
+                height: 5vw;
+                width: 5vw;
+                margin-right: 2vw;
+                padding-top: 0.5vw;
+            }
+
+            div.all {
+                position: absolute;
+                width: 100vw;
+                height: 10vw;
+                bottom: 0vw;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            div#all {
+                cursor: pointer;
+                backdrop-filter: brightness(0.8);
+                display: flex;
+                align-content: stretch;
+                align-items: center;
+                flex-direction: column;
+                justify-content: space-around;
+                width: 38vw;
+                height: 7vw;
+                font-size: 3vw;
+                font-weight: bold;
+                box-shadow: inset 0 0 10px 10px white;
+            }
+
+            img.bg {
+                position: absolute;
+                width: auto;
+                height: 100%;
+                filter: saturate(5.5) blur(50px) opacity(0.5);
+                top: 50%;  
+                left: 50%; 
+                transform: translate(-50%, -50%);
+            }
+        </style>
+    </head>
+
+    <body>
+        <img src="" alt="" name="favicon" class="bg">
+        <h3><i id="title">no website</i></h3>
+        <div class="container" id="container"></div>
+        <script src="colorful.js"></script>
+        <script>
+            String.prototype.capitalise = function () {
+                return this.split(" ").map(function (ele) { return ele[0].toUpperCase() + ele.slice(1).toLowerCase(); }).join(" ");
+            };
+
+            var addresses, images;
+            const name = "Military Technologies";
+            var zeros = '';
+            addresses = [
+                "https://moodle.huji.ac.il/2024-25/course/view.php?id=3340",
+                "https://yoav-palti.github.io/linear-algebra-to-iphone/intro/intro.html"
+            ];
+            images = [
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Moodle-logo.svg/512px-Moodle-logo.svg.png",
+                "https://yoav-palti.github.io/linear-algebra-to-iphone/_images/logo.png"
+            ];
+
+
+            const title = document.getElementById('title');
+            const favicons = document.getElementsByName('favicon');
+
+            handle_title();
+
+            const length = addresses.length;
+            const container = document.getElementById('container');
+            container.innerHTML = "";
+
+            for (let i = 0; i < length; i++) {
+                container.innerHTML += `
+                    <div class="blob" onclick="clicked(${i});">
+                        <h1>${i == 0 ? "Moodle" : "Summary"}</h1>
+                        <img src="${images[i]}" alt="" onload="setTimeout(taintParent, 200, this)">
+                        <h2>${addresses[i]}</h2>
+                    </div>
+                `;
+            }
+
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            function clicked(i) {
+                if (malfromed_link()) return;
+
+                var result = window.location.search.replace(/0/, i);
+                if (result.charAt(0) == '?') result = result.substring(1);
+                console.log(result);
+                window.location.assign(result);
+            }
+
+            function openAll() {
+                if (malfromed_link()) return;
+
+                function atindex(i) {
+                    var result = window.location.search.replace(/0/, i);
+                    if (result.charAt(0) == '?') result = result.substring(1);
+                    console.log(result);
+                    return result
+                }
+
+                for (var i = length - 2; i >= 0; i--) {
+                    openInNewTab(atindex(i));
+                }
+
+                window.location.replace(atindex(length - 1));
+
+            }
+
+            function openInNewTab(href) {
+                Object.assign(document.createElement('a'), {
+                    target: '_blank',
+                    rel: 'noopener noreferrer',
+                    href: href,
+                }).click();
+            }
+
+            function handle_title() {
+                for (const img of favicons) {
+                    img.src = `https://yoav-palti.github.io/linear-algebra-to-iphone/_images/logo.png`;
+                }
+                title.innerText = "Military Technologies"; // The h3 is something like "Google Calendar".
+                
+                document.getElementsByTagName('head')[0].innerHTML += `<link rel="icon" href="${favicons[0].src}">`; // favicon of shortcut matches dest site.
+
+                document.title = "Military Technologies Page Selector"; // The title is something like "Google Calendar Account Selector"
+
+                // taintParent(img); // won't work because Google isn't permissible enough on its images
+            }
+
+            function malfromed_link() {
+                if (window.location.search == "") {
+                    console.error("Empty query");
+                    window.alert("Malformed link...");
+                    return true;
+                }
+                else if (!window.location.search.includes('0')) {
+                    console.error("0-less query"); // query must contain '0' so an account can be chosen.
+                    window.alert("Malformed link...");
+                    return true;
+                }
+                return false;
+            }
+
+            // After having written the code, I considered googling the problem of extracting a colour palette from an image,
+            // to see what ideas others had. I found this: https://dev.to/producthackers/creating-a-color-palette-with-javascript-44ip
+        </script>
+    </body>
+
+</html>

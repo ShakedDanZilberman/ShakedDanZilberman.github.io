@@ -193,30 +193,9 @@
             }
 
             function clicked(i) {
-                if (malfromed_link()) return;
-
-                var result = window.location.search.replace(/0/, i);
-                if (result.charAt(0) == '?') result = result.substring(1);
+                var result = addresses[i];
                 console.log(result);
                 window.location.assign(result);
-            }
-
-            function openAll() {
-                if (malfromed_link()) return;
-
-                function atindex(i) {
-                    var result = window.location.search.replace(/0/, i);
-                    if (result.charAt(0) == '?') result = result.substring(1);
-                    console.log(result);
-                    return result
-                }
-
-                for (var i = length - 2; i >= 0; i--) {
-                    openInNewTab(atindex(i));
-                }
-
-                window.location.replace(atindex(length - 1));
-
             }
 
             function openInNewTab(href) {
@@ -238,20 +217,6 @@
                 document.title = "Military Technologies Page Selector"; // The title is something like "Google Calendar Account Selector"
 
                 // taintParent(img); // won't work because Google isn't permissible enough on its images
-            }
-
-            function malfromed_link() {
-                if (window.location.search == "") {
-                    console.error("Empty query");
-                    window.alert("Malformed link...");
-                    return true;
-                }
-                else if (!window.location.search.includes('0')) {
-                    console.error("0-less query"); // query must contain '0' so an account can be chosen.
-                    window.alert("Malformed link...");
-                    return true;
-                }
-                return false;
             }
 
             // After having written the code, I considered googling the problem of extracting a colour palette from an image,

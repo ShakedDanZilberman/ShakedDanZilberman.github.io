@@ -52,7 +52,7 @@
             margin-left: -250px;
             /* Half the width */
             position: absolute;
-            top: 50%;
+            top: 150%;
             left: 50%;
         }
 
@@ -101,71 +101,107 @@
             align-items: center;
         }
 
-        div.characters {
+        div.character {
+            height: 100vh;
+        }
+
+        div.inputs>input {
+            width: 300px;
+            height: 40px;
+            margin: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            direction: rtl;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        div.splitscreen {
             display: flex;
-            flex-direction: row;
+            flex-direction: row-reverse;
             align-items: center;
-            column-gap: 5vw;
-            justify-content: center;
+            column-gap: 10vw;
+            justify-content: flex-start;
             align-content: center;
             flex-wrap: wrap;
+            margin-top: 20px;
+            margin-right: 5vw;
         }
 
-        div.character {
-            align-items: center;
-            text-align: center;
+        div.signature_result {
+            font-family: 'Guttman-Aharoni', 'Aharoni', 'David', 'Arial', sans-serif;
+            font-size: 2vw;
         }
 
-        .characters>img {
-            margin-top: 5vh;
-            width: 30vw;
-            height: 30vw;
-            border-radius: 10px;
-        }
-
-        .characters {
-            position: relative;
-        }
-
-        .characters img {
+        img.signature_img {
+            width: 707px;
+            height: 300px;
             position: absolute;
-            top: 0px;
-            opacity: 0;
-            animation: fade 16s linear infinite;
-            /* Adjust the duration as needed */
+            top: 20vh;
+            left: 7vw;
+            z-index: -1;
+            filter: none;
+            border: 25px solid #fff;
         }
 
-        .characters img:nth-child(1) {
-            animation-delay: 0s;
+        div.signature_result>#signature_name_container {
+            position: absolute;
+            top: 27.2vh;
+            right: 60.5vw;
+            direction: rtl;
+            width: 29vw;
+            height: 16vh;
+            display: flex;
+            align-items: flex-end;
         }
 
-        .characters img:nth-child(2) {
-            animation-delay: 4s;
-            /* Adjust the delay based on the animation duration */
+        div.signature_result>#signature_name {
+            /* font-size: 5.3vw; */
+            color: #665493;
+            white-space: nowrap;
+            margin-top: auto;
         }
 
-        .characters img:nth-child(3) {
-            animation-delay: 8s;
-            /* Adjust the delay based on the animation duration */
+        div.signature_result>#signature_position {
+            position: absolute;
+            top: 44vh;
+            right: 60vw;
+            font-size: 3.5vw;
+            color: #7f7f7f;
+            direction: rtl;
         }
 
-        .characters img:nth-child(4) {
-            animation-delay: 12s;
-            /* Adjust the delay based on the animation duration */
+        div.signature_result>#signature_mail {
+            position: absolute;
+            top: 53vh;
+            right: 60vw;
+            font-size: 2vw;
+            color: #4f4f4f;
+            direction: ltr;
+            max-width: 30vw;
+            text-transform: lowercase;
         }
 
-        @keyframes fade {
+        div.signature_result>#signature_phone {
+            position: absolute;
+            top: 58vh;
+            right: 60vw;
+            font-size: 2vw;
+            color: #4f4f4f;
+            direction: ltr;
+        }
 
-            0%,
-            25%,
-            100% {
-                opacity: 0;
-            }
-
-            2%,
-            20% {
-                opacity: 1;
-            }
+        .unselectable {
+            -webkit-user-select: none;
+            /* Chrome all / Safari all */
+            -moz-user-select: none;
+            /* Firefox all */
+            -ms-user-select: none;
+            /* IE 10+ */
+            user-select: none;
+            /* Likely future */
         }
     </style>
 </head>
@@ -173,6 +209,30 @@
 <body>
     <img src="talpiot_bg.jpg" alt="" class="bg">
     <img src="talpiot_bg.jpg" alt="" class="bg lower">
+
+
+    <div class="character">
+        <h3 style="margin-top: 20px">מחולל חתימה למייל תלפיות</h3>
+        <div class="splitscreen">
+            <div class="inputs">
+                <input type="text" id="name" placeholder="שם מלא" required oninput="updateSignature();"><br>
+                <input type="text" id="position" placeholder="תפקיד (אפשר להשאיר ריק)" oninput="updateSignature();"><br>
+                <input type="text" id="mail" placeholder="מייל תלפיות" required oninput="updateSignature();"><br>
+                <input type="text" id="phone" placeholder="טלפון" required oninput="updateSignature();"><br>
+            </div>
+
+            <div class="signature_result">
+                <img src="signature_bg.png" alt="Please refresh the page" id="signature_bg"
+                    class="signature_img unselectable">
+                <div id="signature_name_container">
+                    <div id="signature_name">שם מלא</div>
+                </div>
+                <h4 id="signature_position"></h4>
+                <h4 id="signature_mail">israel.israeli.00@gmail.com</h4>
+                <h4 id="signature_phone">123-4567890</h4>
+            </div>
+        </div>
+    </div>
     <img src="https://upload.wikimedia.org/wikipedia/he/1/14/Minecraft_Logo.png" alt="" class="bg transparent">
     <h3><i id="title">How many can you complete?</i></h3>
     <h4>Talpiot<sup>45</sup></h4>
@@ -194,21 +254,10 @@
         <img src="https://skinmc.net/achievement/12/From+Hod+To+Evyatar/In+one+day" alt="Please refresh the page" />
         <img src="https://skinmc.net/achievement/11/Useless+Ambition/Waste+10+min+with+Sagab"
             alt="Please refresh the page" />
-        <img src="https://skinmc.net/achievement/36/Cleaning+Day/07%3A50%2C+16%3A15%2C+20%3A30%2C+22%3A00" alt="Minecraft Achievement" />
+        <img src="https://skinmc.net/achievement/36/Cleaning+Day/07%3A50%2C+16%3A15%2C+20%3A30%2C+22%3A00"
+            alt="Minecraft Achievement" />
 
     </div>
-
-    <div class="character">
-        <h3 style="margin-top: 130px"><i id="title">דמות הבוגר – רפורמות</i></h3>
-        <div class="characters">
-            <img src="character1.png">
-            <img src="character2.jpg">
-            <img src="character3.jpg">
-            <img src="character4.jpg">
-            <img src="character5.png">
-        </div>
-    </div>
-
     <script>
         // randomise background hue:
         for (let bg of document.getElementsByClassName('bg')) {
@@ -217,63 +266,125 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-    const container = document.getElementById('container');
-    const images = container.getElementsByTagName('img');
+            const container = document.getElementById('container');
+            const images = container.getElementsByTagName('img');
 
-    // Function to update image appearance based on its stored state
-    function updateImageAppearance(image, checkbox) {
-        const imageState = localStorage.getItem(image.src) || '0';
+            // Function to update image appearance based on its stored state
+            function updateImageAppearance(image, checkbox) {
+                const imageState = localStorage.getItem(image.src) || '0';
 
-        // Set initial appearance based on stored state
-        image.style.opacity = imageState === '1' ? '0.5' : '1';
-        image.style.filter = imageState === '1' ? 'grayscale(80%)' : 'grayscale(0%)';
+                // Set initial appearance based on stored state
+                image.style.opacity = imageState === '1' ? '0.5' : '1';
+                image.style.filter = imageState === '1' ? 'grayscale(80%)' : 'grayscale(0%)';
 
-        // Set checkbox state based on stored state
-        checkbox.checked = imageState === '1';
-    }
+                // Set checkbox state based on stored state
+                checkbox.checked = imageState === '1';
+            }
 
-    for (const image of images) {
-        // Create a new div for each image
-        const newDiv = document.createElement('div');
+            for (const image of images) {
+                // Create a new div for each image
+                const newDiv = document.createElement('div');
 
-        // Create a checkbox
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
+                // Create a checkbox
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
 
-        // Append the checkbox to the new div
-        newDiv.appendChild(checkbox);
+                // Append the checkbox to the new div
+                newDiv.appendChild(checkbox);
 
-        // Append the original image to the new div
-        const newimg = image.cloneNode(true)
-        newDiv.appendChild(newimg);
+                // Append the original image to the new div
+                const newimg = image.cloneNode(true)
+                newDiv.appendChild(newimg);
 
-        // Attach event listener to handle image load
-        newimg.addEventListener('load', function () {
-            updateImageAppearance(newimg, checkbox);
+                // Attach event listener to handle image load
+                newimg.addEventListener('load', function () {
+                    updateImageAppearance(newimg, checkbox);
+                });
+
+                // Attach event listener to the checkbox
+                checkbox.addEventListener('click', function () {
+                    // Toggle transparency and grayscale on checkbox click
+                    const isChecked = this.checked;
+                    const imageSrc = newimg.src;
+
+                    // Update image appearance
+                    newimg.style.opacity = isChecked ? '0.5' : '1';
+                    newimg.style.filter = isChecked ? 'grayscale(80%)' : 'grayscale(0%)';
+
+                    console.log(newimg)
+
+                    // Update localStorage state
+                    localStorage.setItem(imageSrc, isChecked ? '1' : '0');
+                });
+
+                // Replace the original image with the new div
+                container.replaceChild(newDiv, image);
+            }
         });
 
-        // Attach event listener to the checkbox
-        checkbox.addEventListener('click', function () {
-            // Toggle transparency and grayscale on checkbox click
-            const isChecked = this.checked;
-            const imageSrc = newimg.src;
 
-            // Update image appearance
-            newimg.style.opacity = isChecked ? '0.5' : '1';
-            newimg.style.filter = isChecked ? 'grayscale(80%)' : 'grayscale(0%)';
+        const output = document.getElementById('signature_name');
+        const outputContainer = document.getElementById('signature_name_container');
 
-            console.log(newimg)
+        function resize_to_fit() {
+            let fontSize = window.getComputedStyle(output).fontSize;
+            output.style.fontSize = (parseFloat(fontSize) - 1) + 'px';
 
-            // Update localStorage state
-            localStorage.setItem(imageSrc, isChecked ? '1' : '0');
-        });
+            console.log(fontSize, output.clientWidth, outputContainer.clientHeight)
 
-        // Replace the original image with the new div
-        container.replaceChild(newDiv, image);
-    }
-});
+            if (output.clientHeight >= outputContainer.clientHeight) {
+                resize_to_fit();
+            }
+        }
 
+        function updateSignature() {
+            var name = document.getElementById('name').value || 'שם מלא';
+            var position = document.getElementById('position').value;
+            var mail = document.getElementById('mail').value || '[מייל תלפיות]';
+            var phone = document.getElementById('phone').value || 'טלפון';
 
+            document.getElementById('signature_name').innerText = name;
+            document.getElementById('signature_name').style.fontSize = '200px'; // Default font size
+            document.getElementById('signature_name').style.color = '#665493'; // Default color
+            resize_to_fit();
+            document.getElementById('signature_position').innerText = position;
+            document.getElementById('signature_mail').innerText = mail;
+            document.getElementById('signature_phone').innerText = phone;
+
+            phone_regex = /[0-9]{3}-[0-9]{7}/;
+            if (!phone.match(phone_regex)) {
+                // extract the numbers from the string
+                phone = phone.replace(/[^0-9]/g, '');
+                // format the phone number as 123-4567890
+                if (phone.length > 3) {
+                    phone = phone.substring(0, 3) + '-' + phone.substring(3);
+                }
+            }
+            document.getElementById('signature_phone').innerText = phone;
+
+            // Save the signature data to localStorage
+            localStorage.setItem('signature_name', name);
+            localStorage.setItem('signature_position', position);
+            localStorage.setItem('signature_mail', mail);
+            localStorage.setItem('signature_phone', phone);
+        }
+
+        function loadSignature() {
+            // Load the signature data from localStorage
+            const name = localStorage.getItem('signature_name') || '';
+            const position = localStorage.getItem('signature_position') || '';
+            const mail = localStorage.getItem('signature_mail') || '';
+            const phone = localStorage.getItem('signature_phone') || '';
+
+            document.getElementById('name').value = name == 'שם מלא' ? '' : name;
+            document.getElementById('position').value = position == 'תפקיד' ? '' : position;
+            document.getElementById('mail').value = mail == 'מייל תלפיות' ? '' : mail;
+            document.getElementById('phone').value = phone == 'טלפון' ? '' : phone;
+
+            updateSignature();
+        }
+
+        setTimeout(loadSignature, 50);
     </script>
 
 </body>

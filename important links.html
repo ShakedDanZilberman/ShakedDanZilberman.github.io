@@ -55,6 +55,11 @@
             cursor: pointer;
         }
 
+        div.blob:focus-visible {
+            outline: 3px solid #000;
+            outline-offset: -2px;
+        }
+
         div.blob>h1,
         div.blob>h2 {
             margin: 0;
@@ -63,6 +68,10 @@
 
         div.blob>h1 {
             font-size: 1.8vw;
+        }
+
+        div.blob:focus-visible>h1 {
+            text-shadow: 3px 2px 3px rgba(255, 255, 255, 0.8);
         }
 
         div.blob>h2 {
@@ -89,6 +98,12 @@
             height: auto;
             border-radius: 50%;
             max-height: 123px;
+        }
+
+        .blob:focus-visible img {
+            filter: saturate(1.6) brightness(1.15) contrast(1.05);
+            transform: scale(1.02);
+            transition: filter 0.3s ease, transform 0.3s ease;
         }
 
         .blob {
@@ -275,7 +290,7 @@
             var linkFontSize = addresses[i].length < 29 ? "20px" : addresses[i].length < 41 ? "12px" : "10px";
             var disabled = data[i].disabled ? "disabled" : "";
             container.innerHTML += `
-                    <div class="blob ${disabled}" onclick="clicked(${data[i].disabled ? -1 : i});">
+                    <div class="blob ${disabled}" onclick="clicked(${data[i].disabled ? -1 : i});" onkeydown="keydown(${data[i].disabled ? -1 : i});" tabindex="${i + 1}">
                         <h1 style="font-size: ${fontSize}">${name}</h1>
                         <img src="${images[i]}" alt="" onload="setTimeout(taintParent, 200, this)">
                         <h2 style="font-size: ${linkFontSize}">${addresses[i]}</h2>
@@ -295,6 +310,14 @@
             }
 
             window.location.assign(addresses[i]);
+        }
+
+        function keydown(i) {
+            console.log(event);
+
+            if (event.key === 'Enter') {
+                clicked(i);
+            }
         }
 
         function openInNewTab(href) {

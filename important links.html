@@ -13,6 +13,11 @@
             height: 100%;
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0 !important;
+        }
+
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .bg {
@@ -68,6 +73,9 @@
 
         div.blob>h1 {
             font-size: 1.8vw;
+            background-color: transparent;
+            border: none !important;
+            white-space: break-spaces;
         }
 
         div.blob:focus-visible>h1 {
@@ -75,7 +83,7 @@
         }
 
         div.blob>h2 {
-            font-size: 1.2vw;
+            font-size: 1.2vw !important;
             overflow: hidden;
             font-weight: normal;
             font-style: italic;
@@ -91,6 +99,12 @@
 
         i#title {
             font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+            font-size: 5vw !important;
+            color: black !important;
+        }
+
+        i#title > sup {
+            color: black !important;
         }
 
         div.blob>img {

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/282/282100.png" type="image/png">
+    <title>Extended 3B1B for Talpiot</title>
+    <style media="screen">
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0 !important;
+        }
+
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .bg {
+            background-image: url("talpiot_bg.jpg");
+            background-size: 100vw 56.25vw;
+            background-position: center;
+            background-repeat: repeat-y;
+            filter: invert(100%) blur(3px);
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100vw;
+            height: -webkit-fill-available;
+            z-index: -3;
+        }
+
+        h3 {
+            top: 5%;
+            text-align: center;
+            width: 100%;
+            font-size: 5vw;
+            margin: 0;
+            z-index: 1;
+            text-transform: capitalize;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        img#favicon {
+            height: 5vw;
+            width: 5vw;
+            margin-right: 2vw;
+            padding-top: 0.5vw;
+        }
+
+        i#title {
+            font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+            font-size: 5vw !important;
+            color: black !important;
+        }
+
+        i#title>sup {
+            color: black !important;
+        }
+
+        @media only screen and (max-width: 930px) {
+            body {
+                overflow-y: auto;
+            }
+        }
+
+        div#grid {
+            display: grid;
+            grid-template-columns: 21vw 21vw 21vw 21vw;
+            gap: 3.33vw;
+            padding: 3vw;
+            padding-top: 4vw;
+            box-sizing: border-box;
+        }
+
+        div.section {
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 1vw;
+            padding: 1.5vw;
+            box-sizing: border-box;
+            box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+        }
+
+        div.section.physics {
+            background-color: rgba(92, 255, 146, 0.24);
+        }
+
+        div.section.maths {
+            background-color: rgba(92, 182, 255, 0.24);
+        }
+
+        div.section.cs {
+            background-color: rgba(255, 92, 214, 0.24);
+        }
+
+        div.section.talpiot {
+            background-color: rgba(255, 255, 255, 0.24);
+        }
+
+        div.section h2 {
+            margin-top: 0;
+            text-align: center;
+            font-size: 3vw;
+            padding-bottom: 0.5vw;
+            text-transform: capitalize;
+        }
+
+        div.section h3 {
+            margin-top: 0;
+            text-align: right;
+            font-size: 2vw;
+            padding-bottom: 1.4vw;
+            text-transform: capitalize;
+            display: block;
+            cursor: auto;
+        }
+
+        div.course img {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer;
+        }
+
+        div.course a {
+            text-decoration: none;
+            color: black;
+            font-size: 1.4vw;
+            display: block;
+            margin-bottom: 3vh;
+            text-align: center;
+            margin-top: -2vh;
+        }
+
+        div.course a:hover {
+            text-decoration: underline;
+        }
+
+        .course {
+            padding: 0.5vw 0;
+        }
+
+        .course h3 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 2vw;
+            margin: 0;
+        }
+
+        .course h3::after {
+            content: "◀";
+            /* triangle icon */
+            display: inline-block;
+            transition: transform 0.5s;
+            font-size: 1.7vw;
+            padding-left: 0.5vw;
+            cursor: pointer;
+        }
+
+        .course.open h3::after {
+            transform: rotate(-90deg) translateX(-20%);
+        }
+
+        .course-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .course.open .course-content {
+            max-height: 100vh;
+            /* large enough to fit contents */
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg"></div>
+    <h3><i id="title">Extended 3b1b</i> <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/3B1B_Logo.svg/1200px-3B1B_Logo.svg.png"
+            style="margin-left: 1.5vw; width: 5vw;"></h3>
+    <div id="grid"></div>
+
+    <script src="AcademicVideosArchive.js"></script>
+    <script>
+        String.prototype.capitalise = function () {
+            return this.split(" ").map(function (ele) { return ele[0].toUpperCase() + ele.slice(1).toLowerCase(); }).join(" ");
+        };
+
+        // randomise background hue:
+        const newhue = Math.floor(Math.random() * 360);
+        document.getElementsByClassName('bg')[0].style.filter = `invert(100%) hue-rotate(${newhue}deg) blur(3px)`;
+
+        // Load AcademicVideosArchive.js's data and create the page:
+        const grid = document.getElementById("grid");
+        // convert the data which is formatted like
+        // "Physics": [{"course_name": "[Course]", "videos": [{"title": "[TITLE]", "url": "[URL]"}]}]
+        // into sections:
+        // <div class="section"><h2>Physics</h2><div class="course"><h3>[Course]</h3><img src="[THUMBNAIL]"><a href="[URL]">[TITLE]</a></div>...</div>
+        // all the styling will be done in CSS later
+        translation = {
+            "פיזיקה": "physics",
+            "מתמטיקה": "maths",
+            "מדמ\"ח": "cs",
+            "תלפיות": "talpiot",
+        }
+        for (const [section_name, courses] of Object.entries(academicVideosArchive)) {
+            const section = document.createElement("div");
+            section.className = "section " + translation[section_name];
+            const section_title = document.createElement("h2");
+            section_title.innerText = section_name;
+            section.appendChild(section_title);
+            for (const course of courses) {
+                const course_div = document.createElement("div");
+                course_div.className = "course";
+                const course_title = document.createElement("h3");
+                course_title.innerText = course.course_name;
+                course_div.appendChild(course_title);
+                const course_content = document.createElement("div");
+                course_content.className = "course-content";
+                for (const video of course.videos) {
+                    const video_thumbnail = document.createElement("img");
+                    video_thumbnail.src = `http://i3.ytimg.com/vi/${video.url.split("youtu.be/")[1].split("?")[0]}/hqdefault.jpg`;
+                    video_thumbnail.alt = video.title;
+                    video_thumbnail.onclick = function () { window.open(video.url, "_blank"); };
+                    course_content.appendChild(video_thumbnail);
+                    course_content.appendChild(document.createElement("br"));
+                    const video_link = document.createElement("a");
+                    video_link.href = video.url;
+                    video_link.innerText = video.title;
+                    video_link.target = "_blank";
+                    course_content.appendChild(video_link);
+                }
+                course_div.appendChild(course_content);
+                course_title.onclick = () => {
+                    // Find the parent section of this course
+                    const section = course_div.closest(".section");
+
+                    // Close all courses in this section
+                    section.querySelectorAll(".course.open").forEach(c => {
+                        if (c !== course_div) {
+                            c.classList.remove("open");
+                        }
+                    });
+
+                    // Toggle this course
+                    course_div.classList.toggle("open");
+                };
+
+                section.appendChild(course_div);
+            }
+            grid.appendChild(section);
+        }
+
+    </script>
+</body>
+
+</html>

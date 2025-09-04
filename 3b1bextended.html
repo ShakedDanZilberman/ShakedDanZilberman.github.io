@@ -215,6 +215,7 @@
             "מדמ\"ח": "cs",
             "תלפיות": "talpiot",
         }
+
         for (const [section_name, courses] of Object.entries(academicVideosArchive)) {
             const section = document.createElement("div");
             section.className = "section " + translation[section_name];
@@ -231,14 +232,25 @@
                 course_content.className = "course-content";
                 for (const video of course.videos) {
                     const video_thumbnail = document.createElement("img");
-                    video_thumbnail.src = `http://i3.ytimg.com/vi/${video.url.split("youtu.be/")[1].split("?")[0]}/hqdefault.jpg`;
+                    if (!video.url) continue; // skip if no url
+                    var identifier = video.url.split("youtu.be/")[1]?.split("?")[0];
+                    console.log(identifier + " - " + video.title);
+                    if (!identifier) identifier = video.url.split("youtube.com/watch?v=")[1];
+                    if (!identifier) continue; // skip if not a youtube link
+                    if (identifier.includes("&")) identifier = identifier.split("&")[0]; // remove extra parameters
+                    video_thumbnail.src = `http://i3.ytimg.com/vi/${identifier}/hqdefault.jpg`;
                     video_thumbnail.alt = video.title;
                     video_thumbnail.onclick = function () { window.open(video.url, "_blank"); };
                     course_content.appendChild(video_thumbnail);
                     course_content.appendChild(document.createElement("br"));
                     const video_link = document.createElement("a");
                     video_link.href = video.url;
-                    video_link.innerText = video.title;
+                    redWords.forEach(element => {
+                        if (video.title.includes(element)) {
+                            video_link.innerHTML = video.title.replace(element, `<span style="color:red;">${element}</span>`);
+                        }
+                    });
+                    if (!video_link.innerHTML) video_link.innerText = video.title;
                     video_link.target = "_blank";
                     course_content.appendChild(video_link);
                 }

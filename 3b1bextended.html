@@ -190,6 +190,10 @@
             animation: spin 5000s linear infinite;
         }
 
+        ._3b1b.loading {
+            animation: spin 2s linear infinite;
+        }
+
         @keyframes spin {
             from {
                 transform: rotate(0deg);
@@ -286,7 +290,7 @@
     <div class="bg"></div>
     <h3>
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/3B1B_Logo.svg/1200px-3B1B_Logo.svg.png"
-            class="_3b1b">
+            class="_3b1b loading" id="icon">
         <i id="title">אינטואיציה אקדמית</i>
     </h3>
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSfNOTqKRSEi_SDkfi-ARkQWv5FhClxM10eUsidTzgxnMk4j4g/viewform?usp=dialog"
@@ -404,7 +408,6 @@
             if (!video.url) return; // skip if no url
             var identifier = identifierFromURL(video.url);
             if (!identifier) return; // skip if not a youtube link
-            // console.log(identifier + " - " + video.title);
             video_thumbnail.src = `http://i3.ytimg.com/vi/${identifier}/hqdefault.jpg`;
             video_thumbnail.alt = video.title;
             video_thumbnail.onclick = function () { window.open(video.url, "_blank"); };
@@ -425,8 +428,6 @@
             if (!url) return; // skip if no url
             var identifier = identifierFromURL(url);
             if (!identifier) return; // skip if not a youtube link
-            // console.log(identifier + " - " + url);
-            // get the metadata and extract the title
             const video_thumbnail = document.createElement("img");
             video_thumbnail.src = `http://i3.ytimg.com/vi/${identifier}/hqdefault.jpg`;
             video_thumbnail.alt = "YouTube Video";
@@ -463,6 +464,7 @@
         })
             .then(response => {
                 console.log('Response received:', response);
+                document.getElementById('icon').classList.remove('loading');
                 if (response.ok) {
                     return response.json(); // Parse the JSON response
                 } else {
@@ -470,7 +472,7 @@
                 }
             })
             .then(data => {
-                // remove all the children of grid:
+                // remove all the children of grid (static sections):
                 while (grid.firstChild) {
                     grid.removeChild(grid.firstChild);
                 }

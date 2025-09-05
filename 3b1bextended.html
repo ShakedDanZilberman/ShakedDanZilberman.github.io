@@ -201,9 +201,10 @@
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/3B1B_Logo.svg/1200px-3B1B_Logo.svg.png"
             style="margin-left: 1.5vw; width: 5vw;"></h3>
     <div id="grid"></div>
-    <div id="hidden-player" style="display: none;"></div>
+    <div id="yt-player-container" style="display: none;"></div>
 
     <script src="AcademicVideosArchive.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         String.prototype.capitalise = function () {
             return this.split(" ").map(function (ele) { return ele[0].toUpperCase() + ele.slice(1).toLowerCase(); }).join(" ");
@@ -213,36 +214,22 @@
         const newhue = Math.floor(Math.random() * 360);
         document.getElementsByClassName('bg')[0].style.filter = `invert(100%) hue-rotate(${newhue}deg) blur(3px)`;
 
-        // YouTube API logic:
-        /**
-         * Get the duration of a YouTube video (no API key).
-         * @param {string} videoId - The YouTube video ID.
-         * @returns {Promise<string>} Duration in HH:MM:SS format.
-         */
-        async function getYoutubeDuration(videoId) {
-            const url = `https://www.youtube.com/watch?v=${videoId}`;
+        // YouTube logic:
+        async function getVideoMetadata(videoId) {
+            const url = `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`;
             const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error("Failed to fetch video page");
-            }
-
-            const text = await response.text();
-
-            // Look for ytInitialPlayerResponse JSON
-            const match = text.match(/ytInitialPlayerResponse\s*=\s*(\{.+?\});/s);
-            if (!match) {
-                throw new Error("Could not parse player response");
-            }
-
-            const playerResponse = JSON.parse(match[1]);
-            const lengthSeconds = playerResponse.videoDetails?.lengthSeconds;
-
-            if (!lengthSeconds) {
-                throw new Error("Duration not found");
-            }
-
-            return formatDuration(parseInt(lengthSeconds, 10));
+            const data = await response.json();
+            return data;
         }
+
+        async function getVideoDuration(videoId) {
+            const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+            console.log(url);
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.duration; // Duration in ISO 8601 format
+        }
+
 
         /**
          * Convert seconds to HH:MM:SS
@@ -313,15 +300,15 @@
                     const duration_span = document.createElement("span");
                     duration_span.className = "duration";
                     duration_span.innerText = "mm:ss";
-                    getYoutubeDuration(identifier)
-                    .then((duration) => {
-                        duration_span.innerText = duration;
-                        console.log(`Duration of "${video.title}": ${duration}`);
-                    })
-                    .catch((error) => {
-                        console.error(`Error fetching duration for "${video.title}":`, error);
-                        duration_span.innerText = "N/A";
-                    });
+                    getVideoDuration(identifier)
+                        .then((duration) => {
+                            duration_span.innerText = duration;
+                            console.log(`Duration of "${video.title}": ${duration}`);
+                        })
+                        .catch((error) => {
+                            console.error(`Error fetching duration for "${video.title}":`, error);
+                            duration_span.innerText = "N/A";
+                        });
                     video_link.appendChild(duration_span);
                 }
                 course_div.appendChild(course_content);

@@ -1,4 +1,3 @@
-const redWords = ["(Extra)"];
 // URLs must be in the format https://youtu.be/VIDEO_ID or https://www.youtube.com/watch?v=VIDEO_ID
 const academicVideosArchive = {
     "פיזיקה": [

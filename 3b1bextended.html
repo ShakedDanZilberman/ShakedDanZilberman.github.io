@@ -247,6 +247,44 @@
             position: absolute;
         }
 
+        div.section.fade-out {
+            animation: fadeOut 0.6s;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                height: 100%;
+            }
+
+            80% {
+                opacity: 0;
+                height: 0%;
+            }
+
+            100% {
+                opacity: 0;
+                height: 0%;
+                display: none;
+            }
+        }
+
+        div.section.fade-in {
+            animation: fadeIn 0.6s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                height: 0%;
+            }
+
+            to {
+                opacity: 1;
+                height: 100%;
+            }
+        }
+
         /* when in phone, reorganise the grid to a single column layout */
         @media only screen and (max-width: 1000px) {
             div#grid {
@@ -312,10 +350,12 @@
             .add-video-line {
                 border-radius: 0.5vw;
             }
+
             .add-video-line:first-child {
                 width: 6vw;
                 height: 1.3vw;
             }
+
             .add-video-line:last-child {
                 width: 1.3vw;
                 height: 6vw;
@@ -338,14 +378,19 @@
             <div class="add-video-line"></div>
         </div>
     </a>
-    <div id="grid"></div>
+    <div id="grid">
+        <div id="physics" class="section physics"></div>
+        <div id="maths" class="section maths"></div>
+        <div id="cs" class="section cs"></div>
+        <div id="talpiot" class="section talpiot"></div>
+    </div>
     <div id="yt-player-container" style="display: none;"></div>
 
     <script src="AcademicVideosArchive.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script>
+    <script type="module">
 
-        const EGET_URL = 'https://script.google.com/macros/s/AKfycbwB-o22Kh9dhscSRwL0zZiFks0zfnSIjRFMMaVQ-UuGmV5X2gdtu1YpXonN5l3LJsmtcA/exec';
+        const EGET_URL = 'https://script.google.com/macros/s/AKfycbzGcsuXGiMcqFV9JNbwLMLaHdE_1DgbGcBn8cS9nqebzNOhHZ7d-XnHaSDngc0y3e6ohg/exec';
 
         String.prototype.capitalise = function () {
             return this.split(" ").map(function (ele) { return ele[0].toUpperCase() + ele.slice(1).toLowerCase(); }).join(" ");
@@ -355,15 +400,12 @@
         const newhue = Math.floor(Math.random() * 360);
         document.getElementsByClassName('bg')[0].style.filter = `invert(100%) hue-rotate(${newhue}deg) blur(3px)`;
 
-
-
         async function getVideoMetadata(videoId) {
             const url = `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`;
             const response = await fetch(url);
             const data = await response.json();
             return data;
         }
-
 
         const grid = document.getElementById("grid");
         // convert the data which is formatted like
@@ -379,21 +421,22 @@
             "תלפיות": "talpiot",
         };
 
-        function handleSection(section_name, courses) {
+        async function handleSection(section_name, courses) {
             const section = document.createElement("div");
-            section.className = "section " + translation[section_name];
+            section.className = "fade-in section " + translation[section_name];
+            section.id = translation[section_name];
             const section_title = document.createElement("h2");
             section_title.innerText = section_name;
             section.appendChild(section_title);
             if (courses === undefined) return section; // in case of no courses, return empty section
             for (const course of courses) {
-                const course_div = handleCourse(course);
+                const course_div = await handleCourse(course);
                 section.appendChild(course_div);
             }
             return section;
         }
 
-        function handleCourse(course) {
+        async function handleCourse(course) {
             const course_div = document.createElement("div");
             course_div.className = "course";
             const course_title = document.createElement("h3");
@@ -402,11 +445,9 @@
             const course_content = document.createElement("div");
             course_content.className = "course-content";
             for (const video of course.videos) {
-                const [video_thumbnail, video_link] = handleVideo(video);
-                if (!video_thumbnail || !video_link) continue; // skip if invalid
-                course_content.appendChild(video_thumbnail);
-                course_content.appendChild(document.createElement("br"));
-                course_content.appendChild(video_link);
+                const children = await handleVideo(video);
+                if (!children) continue; // skip if invalid
+                children.forEach(child => course_content.appendChild(child));
             }
             course_div.appendChild(course_content);
             course_title.onclick = () => {
@@ -434,52 +475,31 @@
             return course_div;
         }
 
-        function handleVideo(video) {
-            // video can either be {title: "", url: ""} or just a string (the url)
-            if (typeof video === "string") {
-                return handleURLOnlyVideo(video);
-            }
-            if (video.title === undefined || video.title == '') {
-                return handleURLOnlyVideo(video.url);
-            }
-            const video_thumbnail = document.createElement("img");
+        async function handleVideo(video) {
             if (!video.url) return; // skip if no url
             var identifier = identifierFromURL(video.url);
             if (!identifier) return; // skip if not a youtube link
-            video_thumbnail.src = `http://i3.ytimg.com/vi/${identifier}/hqdefault.jpg`;
-            video_thumbnail.alt = video.title;
-            video_thumbnail.onclick = function () { window.open(video.url, "_blank"); };
-            const video_link = document.createElement("a");
-            video_link.href = video.url;
-            redWords.forEach(element => {
-                if (video.title.includes(element)) {
-                    video_link.innerHTML = video.title.replace(element, `<span style="color:red;">${element}</span>`);
-                }
-            });
-            if (!video_link.innerHTML) video_link.innerText = video.title;
-            video_link.target = "_blank";
 
-            return [video_thumbnail, video_link];
-        }
+            if (!video.title) video.title = '';
+            if (video.title == '') {
+                video.title = await getVideoMetadata(identifier).then(data => {
+                    if (data && data.title) {
+                        return data.title;
+                    }
+                });
+            }
 
-        function handleURLOnlyVideo(url) {
-            if (!url) return; // skip if no url
-            var identifier = identifierFromURL(url);
-            if (!identifier) return; // skip if not a youtube link
             const video_thumbnail = document.createElement("img");
             video_thumbnail.src = `http://i3.ytimg.com/vi/${identifier}/hqdefault.jpg`;
-            video_thumbnail.alt = "YouTube Video";
-            video_thumbnail.onclick = function () { window.open(url, "_blank"); };
+            video_thumbnail.alt = video.title;
+            video_thumbnail.onclick = () => { window.open(video.url, "_blank"); };
+
             const video_link = document.createElement("a");
-            video_link.href = url;
+            video_link.href = video.url;
+            video_link.innerText = video.title;
             video_link.target = "_blank";
-            video_link.innerText = url;
-            getVideoMetadata(identifier).then(data => {
-                if (data && data.title) {
-                    video_link.innerHTML = data.title;
-                }
-            });
-            return [video_thumbnail, video_link];
+
+            return [video_thumbnail, document.createElement("br"), video_link];
         }
 
         function identifierFromURL(url) {
@@ -492,14 +512,11 @@
 
         for (const [section_name, courses] of Object.entries(academicVideosArchive)) {
             console.log("Loaded static section:", section_name, courses);
-            const section = handleSection(section_name, courses);
-            grid.appendChild(section);
+            const section = await handleSection(section_name, courses);
+            document.getElementById(translation[section_name]).replaceWith(section);
         }
 
-
-        fetch(EGET_URL, {
-            method: 'GET',
-        })
+        fetch(EGET_URL, { method: 'GET' })
             .then(response => {
                 console.log('Response received:', response);
                 document.getElementById('icon').classList.remove('loading');
@@ -510,16 +527,34 @@
                 }
             })
             .then(data => {
-                // remove all the children of grid (static sections):
-                while (grid.firstChild) {
-                    grid.removeChild(grid.firstChild);
-                }
-                // add the dynamic sections:
-                ["פיזיקה", "מתמטיקה", "מדמ\"ח", "תלפיות"].forEach(section_name => {
-                    const section = handleSection(section_name, data[{ 'פיזיקה': 'phys_courses', 'מתמטיקה': 'math_courses', 'מדמ\"ח': 'comp_courses', 'תלפיות': 'talp_courses' }[section_name]]);
-                    grid.appendChild(section);
+                // remove previous static sections' children:
+                var translation = {
+                    "פיזיקה": "physics",
+                    "מתמטיקה": "maths",
+                    "מדמ\"ח": "cs",
+                    "מחשבים": "cs",
+                    "תלפיות": "talpiot"
+                };
+                Object.keys(translation).forEach(section_name => {
+                    const section = document.getElementById(translation[section_name]);
+                    section.innerHTML = '';
                 });
-
+                console.log('Previous static sections cleared.');
+                // add the dynamic sections:
+                const backend_translation = {
+                    'פיזיקה': 'phys_courses',
+                    'מתמטיקה': 'math_courses',
+                    'מדמ"ח': 'comp_courses',
+                    'תלפיות': 'talp_courses'
+                };
+                Object.keys(backend_translation).forEach(async section_name => {
+                    const section = await handleSection(section_name, data[backend_translation[section_name]]);
+                    // apply fade out and fade in animation
+                    section.classList.add('fade-out');
+                    await new Promise(resolve => setTimeout(resolve, 600));
+                    document.getElementById(translation[section_name]).replaceWith(section);
+                    await new Promise(resolve => setTimeout(resolve, 600));
+                });
 
                 console.log('Data received:', data);
             })

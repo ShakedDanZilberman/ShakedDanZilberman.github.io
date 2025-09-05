@@ -4,8 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/3B1B_Logo.svg/1200px-3B1B_Logo.svg.png" type="image/png">
-    <title>מאגר נובע | אינטואיציה לתלפיונים</title>
+    <link rel="icon"
+        href="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/3B1B_Logo.svg/1200px-3B1B_Logo.svg.png"
+        type="image/png">
+    <title>אינטואיציה אקדמית לצוערי תלפיות</title>
     <style media="screen">
         body {
             margin: 0;
@@ -198,6 +200,34 @@
             }
         }
 
+        a.add-video {
+            position: fixed;
+            top: 1vw;
+            right: 1.1vw;
+            z-index: 10;
+        }
+
+        .add-video-circle {
+            width: 4.2vw;
+            height: 4.2vw;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: background-color 0.25s;
+        }
+
+        .add-video-circle:hover {
+            background-color: rgba(0, 0, 0, 0.85);
+        }
+
+        .add-video-line {
+            background-color: white;
+            border-radius: 0.2vw;
+        }
+
         /* when in phone, reorganise the grid to a single column layout */
         @media only screen and (max-width: 930px) {
             div#grid {
@@ -255,9 +285,17 @@
 <body>
     <div class="bg"></div>
     <h3>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/3B1B_Logo.svg/1200px-3B1B_Logo.svg.png" class="_3b1b">
-        <i id="title">מאגר נובע</i>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/3B1B_Logo.svg/1200px-3B1B_Logo.svg.png"
+            class="_3b1b">
+        <i id="title">אינטואיציה אקדמית</i>
     </h3>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfNOTqKRSEi_SDkfi-ARkQWv5FhClxM10eUsidTzgxnMk4j4g/viewform?usp=dialog"
+        target="_blank" class="add-video">
+        <div class="add-video-circle">
+            <div class="add-video-line" style="width: 2.5vw; height: 0.5vw;"></div>
+            <div class="add-video-line" style="width: 0.5vw; height: 2.5vw; position: absolute;"></div>
+        </div>
+    </a>
     <div id="grid"></div>
     <div id="yt-player-container" style="display: none;"></div>
 

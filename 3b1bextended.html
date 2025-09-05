@@ -251,6 +251,15 @@
             animation: fadeOut 0.6s;
         }
 
+        .course-content>a>span {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 0.18vw 0.26vw;
+            margin-right: 0.5vw;
+            font-size: 1.1vw;
+            border-radius: 0.3vw;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
         @keyframes fadeOut {
             0% {
                 opacity: 1;
@@ -359,6 +368,13 @@
             .add-video-line:last-child {
                 width: 1.3vw;
                 height: 6vw;
+            }
+
+            .course-content>a>span {
+                padding: 0.5vw 0.7vw;
+                margin-right: 2vw;
+                font-size: 4vw;
+                border-radius: 2vw;
             }
         }
     </style>
@@ -496,10 +512,31 @@
 
             const video_link = document.createElement("a");
             video_link.href = video.url;
-            video_link.innerText = video.title;
+            const video_duration = document.createElement("span");
+            video_duration.innerText = formatDuration(video.vid_len);
+            if (video_duration.innerText) video_link.appendChild(video_duration);
+            video_link.appendChild(document.createTextNode(video.title));
             video_link.target = "_blank";
 
             return [video_thumbnail, document.createElement("br"), video_link];
+        }
+
+        function formatDuration(s) {
+            // s is in Hh MMm SSs format, e.g. 1h 23m 45s
+            // convert to [H:]MM:SS, e.g. 1:23:45 or 23:45
+            if (!s) return '';
+            var parts = s.split(' ');
+            var h = 0, m = 0, sec = 0;
+            parts.forEach(part => {
+                if (part.endsWith('h')) h = parseInt(part.slice(0, -1));
+                else if (part.endsWith('m')) m = parseInt(part.slice(0, -1));
+                else if (part.endsWith('s')) sec = parseInt(part.slice(0, -1));
+            });
+            if (isNaN(h)) h = 0;
+            if (isNaN(m)) m = 0;
+            if (isNaN(sec)) sec = 0;
+            if (h > 0) return `${h}:${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+            else return `${m}:${sec.toString().padStart(2, '0')}`;
         }
 
         function identifierFromURL(url) {

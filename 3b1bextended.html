@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/282/282100.png" type="image/png">
-    <title>Extended 3B1B for Talpiot</title>
+    <title>מאגר נובע | אינטואיציה לתלפיונים</title>
     <style media="screen">
         body {
             margin: 0;
@@ -56,13 +56,10 @@
         }
 
         i#title {
-            font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 5vw !important;
             color: black !important;
-        }
-
-        i#title>sup {
-            color: black !important;
+            font-style: normal !important;
         }
 
         @media only screen and (max-width: 930px) {
@@ -183,6 +180,25 @@
             opacity: 1;
         }
 
+        img._3b1b {
+            margin-right: 1.5vw;
+            width: 5vw;
+            height: auto;
+            margin-top: 0.7vw;
+            /* animate infinitely as rotating */
+            animation: spin 2000s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         /* when in phone, reorganise the grid to a single column layout */
         @media only screen and (max-width: 930px) {
             div#grid {
@@ -227,15 +243,22 @@
                 font-size: 8vw !important;
                 margin-top: 2vw;
             }
+
+            img._3b1b {
+                width: 10vw;
+                margin-right: 3vw;
+                margin-top: 2vw;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="bg"></div>
-    <h3><i id="title">Extended 3b1b</i> <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/3B1B_Logo.svg/1200px-3B1B_Logo.svg.png"
-            style="margin-left: 1.5vw; width: 5vw;"></h3>
+    <h3>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/3B1B_Logo.svg/1200px-3B1B_Logo.svg.png" class="_3b1b">
+        <i id="title">מאגר נובע</i>
+    </h3>
     <div id="grid"></div>
     <div id="yt-player-container" style="display: none;"></div>
 

@@ -13,12 +13,7 @@ const academicVideosArchive = {
         },
         {
             "course_name": "חשנ\"ל",
-            "videos": [
-                {
-                    "title": "Spacetime rotations, understanding Lorentz transformations",
-                    "url": "https://youtu.be/qdycfWfAtsM?si=7fKuDHrQZYyKt_yJ"
-                }
-            ]
+            "videos": ["https://youtu.be/qdycfWfAtsM?si=7fKuDHrQZYyKt_yJ"]
         }
     ],
     "מתמטיקה": [

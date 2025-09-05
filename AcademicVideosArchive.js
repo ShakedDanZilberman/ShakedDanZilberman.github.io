@@ -34,10 +34,7 @@ const academicVideosArchive = {
         {
             "course_name": "חבורות",
             "videos": [
-                {
-                    "title": "An Introduction to Group Theory",
-                    "url": "https://youtu.be/KftKCG2lD60?si=IrSXH65poX48Bg1T"
-                },
+                "https://youtu.be/KftKCG2lD60?si=IrSXH65poX48Bg1T",
                 {
                     "title": "Simplifying problems with isomorphisms",
                     "url": "https://www.youtube.com/watch?v=VZiLpYC0t5E"

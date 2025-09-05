@@ -182,16 +182,6 @@
             /* large enough to fit contents */
             opacity: 1;
         }
-
-        span.duration {
-            font-size: 1vw;
-            color: #222;
-            background-color: rgba(255, 255, 255, 0.84);
-            padding: 0.2vw 0.5vw;
-            border-radius: 0.5vw;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin-left: 0.5vw;
-        }
     </style>
 </head>
 
@@ -214,7 +204,6 @@
         const newhue = Math.floor(Math.random() * 360);
         document.getElementsByClassName('bg')[0].style.filter = `invert(100%) hue-rotate(${newhue}deg) blur(3px)`;
 
-        // YouTube logic:
         async function getVideoMetadata(videoId) {
             const url = `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`;
             const response = await fetch(url);
@@ -222,29 +211,6 @@
             return data;
         }
 
-        async function getVideoDuration(videoId) {
-            const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
-            console.log(url);
-            const response = await fetch(url);
-            const data = await response.json();
-            return data.duration; // Duration in ISO 8601 format
-        }
-
-
-        /**
-         * Convert seconds to HH:MM:SS
-         */
-        function formatDuration(seconds) {
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = seconds % 60;
-
-            const hh = h > 0 ? String(h).padStart(2, "0") + ":" : "";
-            const mm = String(m).padStart(2, "0");
-            const ss = String(s).padStart(2, "0");
-
-            return hh + mm + ":" + ss;
-        }
 
         // Load AcademicVideosArchive.js's data and create the page:
         const grid = document.getElementById("grid");
@@ -260,75 +226,110 @@
             "תלפיות": "talpiot",
         };
 
-        for (const [section_name, courses] of Object.entries(academicVideosArchive)) {
+        function handleSection(section_name, courses) {
             const section = document.createElement("div");
             section.className = "section " + translation[section_name];
             const section_title = document.createElement("h2");
             section_title.innerText = section_name;
             section.appendChild(section_title);
             for (const course of courses) {
-                const course_div = document.createElement("div");
-                course_div.className = "course";
-                const course_title = document.createElement("h3");
-                course_title.innerText = course.course_name;
-                course_div.appendChild(course_title);
-                const course_content = document.createElement("div");
-                course_content.className = "course-content";
-                for (const video of course.videos) {
-                    const video_thumbnail = document.createElement("img");
-                    if (!video.url) continue; // skip if no url
-                    var identifier = video.url.split("youtu.be/")[1]?.split("?")[0];
-                    if (!identifier) identifier = video.url.split("youtube.com/watch?v=")[1];
-                    if (!identifier) continue; // skip if not a youtube link
-                    if (identifier.includes("&")) identifier = identifier.split("&")[0]; // remove extra parameters
-                    console.log(identifier + " - " + video.title);
-                    video_thumbnail.src = `http://i3.ytimg.com/vi/${identifier}/hqdefault.jpg`;
-                    video_thumbnail.alt = video.title;
-                    video_thumbnail.onclick = function () { window.open(video.url, "_blank"); };
-                    course_content.appendChild(video_thumbnail);
-                    course_content.appendChild(document.createElement("br"));
-                    const video_link = document.createElement("a");
-                    video_link.href = video.url;
-                    redWords.forEach(element => {
-                        if (video.title.includes(element)) {
-                            video_link.innerHTML = video.title.replace(element, `<span style="color:red;">${element}</span>`);
-                        }
-                    });
-                    if (!video_link.innerHTML) video_link.innerText = video.title;
-                    video_link.target = "_blank";
-                    course_content.appendChild(video_link);
-                    const duration_span = document.createElement("span");
-                    duration_span.className = "duration";
-                    duration_span.innerText = "mm:ss";
-                    getVideoDuration(identifier)
-                        .then((duration) => {
-                            duration_span.innerText = duration;
-                            console.log(`Duration of "${video.title}": ${duration}`);
-                        })
-                        .catch((error) => {
-                            console.error(`Error fetching duration for "${video.title}":`, error);
-                            duration_span.innerText = "N/A";
-                        });
-                    video_link.appendChild(duration_span);
-                }
-                course_div.appendChild(course_content);
-                course_title.onclick = () => {
-                    // Find the parent section of this course
-                    const section = course_div.closest(".section");
-
-                    // Close all courses in this section
-                    section.querySelectorAll(".course.open").forEach(c => {
-                        if (c !== course_div) {
-                            c.classList.remove("open");
-                        }
-                    });
-
-                    // Toggle this course
-                    course_div.classList.toggle("open");
-                };
-
+                const course_div = handleCourse(course);
                 section.appendChild(course_div);
             }
+            return section;
+        }
+
+        function handleCourse(course) {
+            const course_div = document.createElement("div");
+            course_div.className = "course";
+            const course_title = document.createElement("h3");
+            course_title.innerText = course.course_name;
+            course_div.appendChild(course_title);
+            const course_content = document.createElement("div");
+            course_content.className = "course-content";
+            for (const video of course.videos) {
+                const [video_thumbnail, video_link] = handleVideo(video);
+                if (!video_thumbnail || !video_link) continue; // skip if invalid
+                course_content.appendChild(video_thumbnail);
+                course_content.appendChild(document.createElement("br"));
+                course_content.appendChild(video_link);
+            }
+            course_div.appendChild(course_content);
+            course_title.onclick = () => {
+                // Find the parent section of this course
+                const section = course_div.closest(".section");
+
+                // Close all courses in this section
+                section.querySelectorAll(".course.open").forEach(c => {
+                    if (c !== course_div) {
+                        c.classList.remove("open");
+                    }
+                });
+
+                // Toggle this course
+                course_div.classList.toggle("open");
+            };
+            return course_div;
+        }
+
+        function handleVideo(video) {
+            // video can either be {title: "", url: ""} or just a string (the url)
+            if (typeof video === "string") {
+                return handleURLOnlyVideo(video);
+            }
+            const video_thumbnail = document.createElement("img");
+            if (!video.url) return; // skip if no url
+            var identifier = identifierFromURL(video.url);
+            if (!identifier) return; // skip if not a youtube link
+            console.log(identifier + " - " + video.title);
+            video_thumbnail.src = `http://i3.ytimg.com/vi/${identifier}/hqdefault.jpg`;
+            video_thumbnail.alt = video.title;
+            video_thumbnail.onclick = function () { window.open(video.url, "_blank"); };
+            const video_link = document.createElement("a");
+            video_link.href = video.url;
+            redWords.forEach(element => {
+                if (video.title.includes(element)) {
+                    video_link.innerHTML = video.title.replace(element, `<span style="color:red;">${element}</span>`);
+                }
+            });
+            if (!video_link.innerHTML) video_link.innerText = video.title;
+            video_link.target = "_blank";
+
+            return [video_thumbnail, video_link];
+        }
+
+        function handleURLOnlyVideo(url) {
+            if (!url) return; // skip if no url
+            var identifier = identifierFromURL(url);
+            if (!identifier) return; // skip if not a youtube link
+            console.log(identifier + " - " + url);
+            // get the metadata and extract the title
+            const video_thumbnail = document.createElement("img");
+            video_thumbnail.src = `http://i3.ytimg.com/vi/${identifier}/hqdefault.jpg`;
+            video_thumbnail.alt = "YouTube Video";
+            video_thumbnail.onclick = function () { window.open(url, "_blank"); };
+            const video_link = document.createElement("a");
+            video_link.href = url;
+            video_link.target = "_blank";
+            video_link.innerText = url;
+            getVideoMetadata(identifier).then(data => {
+                if (data && data.title) {
+                    video_link.innerHTML = data.title;
+                }
+            });
+            return [video_thumbnail, video_link];
+        }
+
+        function identifierFromURL(url) {
+            var identifier = url.split("youtu.be/")[1]?.split("?")[0];
+            if (!identifier) identifier = url.split("youtube.com/watch?v=")[1];
+            if (!identifier) return null; // not a youtube link
+            if (identifier.includes("&")) identifier = identifier.split("&")[0]; // remove extra parameters
+            return identifier;
+        }
+
+        for (const [section_name, courses] of Object.entries(academicVideosArchive)) {
+            const section = handleSection(section_name, courses);
             grid.appendChild(section);
         }
 

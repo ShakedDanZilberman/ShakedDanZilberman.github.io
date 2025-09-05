@@ -1,5 +1,5 @@
 const redWords = ["(Extra)"];
-
+// URLs must be in the format https://youtu.be/VIDEO_ID or https://www.youtube.com/watch?v=VIDEO_ID
 const academicVideosArchive = {
     "פיזיקה": [
         {
@@ -26,7 +26,7 @@ const academicVideosArchive = {
             "course_name": "אינפי",
             "videos": [
                 {
-                    "title": "Induction on the Reals, and Weierstrass Extreme Value Theorem",
+                    "title": "Induction on the Reals, and Weierstrass Extreme Value Theorem (Extra)",
                     "url": "https://youtu.be/mNJhQ36h70s?si=hsOb2YUnby17yNLw"
                 }
             ]

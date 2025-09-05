@@ -204,10 +204,7 @@
     <div id="hidden-player" style="display: none;"></div>
 
     <script src="AcademicVideosArchive.js"></script>
-    <script src="youtubeApiWrapper.js" type="module"></script>
-    <script type="module">
-        import getYouTubeDuration from './youtubeApiWrapper.js';
-
+    <script>
         String.prototype.capitalise = function () {
             return this.split(" ").map(function (ele) { return ele[0].toUpperCase() + ele.slice(1).toLowerCase(); }).join(" ");
         };
@@ -215,6 +212,52 @@
         // randomise background hue:
         const newhue = Math.floor(Math.random() * 360);
         document.getElementsByClassName('bg')[0].style.filter = `invert(100%) hue-rotate(${newhue}deg) blur(3px)`;
+
+        // YouTube API logic:
+        /**
+         * Get the duration of a YouTube video (no API key).
+         * @param {string} videoId - The YouTube video ID.
+         * @returns {Promise<string>} Duration in HH:MM:SS format.
+         */
+        async function getYoutubeDuration(videoId) {
+            const url = `https://www.youtube.com/watch?v=${videoId}`;
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error("Failed to fetch video page");
+            }
+
+            const text = await response.text();
+
+            // Look for ytInitialPlayerResponse JSON
+            const match = text.match(/ytInitialPlayerResponse\s*=\s*(\{.+?\});/s);
+            if (!match) {
+                throw new Error("Could not parse player response");
+            }
+
+            const playerResponse = JSON.parse(match[1]);
+            const lengthSeconds = playerResponse.videoDetails?.lengthSeconds;
+
+            if (!lengthSeconds) {
+                throw new Error("Duration not found");
+            }
+
+            return formatDuration(parseInt(lengthSeconds, 10));
+        }
+
+        /**
+         * Convert seconds to HH:MM:SS
+         */
+        function formatDuration(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+
+            const hh = h > 0 ? String(h).padStart(2, "0") + ":" : "";
+            const mm = String(m).padStart(2, "0");
+            const ss = String(s).padStart(2, "0");
+
+            return hh + mm + ":" + ss;
+        }
 
         // Load AcademicVideosArchive.js's data and create the page:
         const grid = document.getElementById("grid");
@@ -248,10 +291,10 @@
                     const video_thumbnail = document.createElement("img");
                     if (!video.url) continue; // skip if no url
                     var identifier = video.url.split("youtu.be/")[1]?.split("?")[0];
-                    console.log(identifier + " - " + video.title);
                     if (!identifier) identifier = video.url.split("youtube.com/watch?v=")[1];
                     if (!identifier) continue; // skip if not a youtube link
                     if (identifier.includes("&")) identifier = identifier.split("&")[0]; // remove extra parameters
+                    console.log(identifier + " - " + video.title);
                     video_thumbnail.src = `http://i3.ytimg.com/vi/${identifier}/hqdefault.jpg`;
                     video_thumbnail.alt = video.title;
                     video_thumbnail.onclick = function () { window.open(video.url, "_blank"); };
@@ -270,9 +313,14 @@
                     const duration_span = document.createElement("span");
                     duration_span.className = "duration";
                     duration_span.innerText = "mm:ss";
-                    getYouTubeDuration(identifier, (formatted, rawSeconds) => {
-                        duration_span.innerText = `${formatted}`;
-                        console.log(`Duration of "${video.title}": ${formatted} (${rawSeconds} seconds)`);
+                    getYoutubeDuration(identifier)
+                    .then((duration) => {
+                        duration_span.innerText = duration;
+                        console.log(`Duration of "${video.title}": ${duration}`);
+                    })
+                    .catch((error) => {
+                        console.error(`Error fetching duration for "${video.title}":`, error);
+                        duration_span.innerText = "N/A";
                     });
                     video_link.appendChild(duration_span);
                 }

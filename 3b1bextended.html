@@ -182,6 +182,52 @@
             /* large enough to fit contents */
             opacity: 1;
         }
+
+        /* when in phone, reorganise the grid to a single column layout */
+        @media only screen and (max-width: 930px) {
+            div#grid {
+                grid-template-columns: 1fr;
+                gap: 6vw;
+                padding: 3vw;
+                padding-top: 8vw;
+            }
+
+            div.section h2 {
+                font-size: 6vw;
+            }
+
+            div.section h3 {
+                font-size: 4vw;
+            }
+
+            div.course a {
+                font-size: 3.5vw;
+                margin-bottom: 6vh;
+                margin-top: -0.2vh;
+            }
+
+            .course h3::after {
+                font-size: 3.5vw;
+            }
+
+            div.course img {
+                width: 70vw;
+                align-items: center;
+            }
+
+            .course-content {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            i#title {
+                font-size: 8vw !important;
+                margin-top: 2vw;
+            }
+        }
     </style>
 </head>
 
@@ -256,6 +302,14 @@
             }
             course_div.appendChild(course_content);
             course_title.onclick = () => {
+                // If on mobile, find the parent of the section and close all other sections as well
+                if (window.innerWidth <= 930) {
+                    document.querySelectorAll(".section .course.open").forEach(c => {
+                        if (c !== course_div) {
+                            c.classList.remove("open");
+                        }
+                    });
+                }
                 // Find the parent section of this course
                 const section = course_div.closest(".section");
 

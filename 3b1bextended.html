@@ -182,6 +182,16 @@
             /* large enough to fit contents */
             opacity: 1;
         }
+
+        span.duration {
+            font-size: 1vw;
+            color: #222;
+            background-color: rgba(255, 255, 255, 0.84);
+            padding: 0.2vw 0.5vw;
+            border-radius: 0.5vw;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-left: 0.5vw;
+        }
     </style>
 </head>
 
@@ -191,9 +201,13 @@
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/3B1B_Logo.svg/1200px-3B1B_Logo.svg.png"
             style="margin-left: 1.5vw; width: 5vw;"></h3>
     <div id="grid"></div>
+    <div id="hidden-player" style="display: none;"></div>
 
     <script src="AcademicVideosArchive.js"></script>
-    <script>
+    <script src="youtubeApiWrapper.js" type="module"></script>
+    <script type="module">
+        import getYouTubeDuration from './youtubeApiWrapper.js';
+
         String.prototype.capitalise = function () {
             return this.split(" ").map(function (ele) { return ele[0].toUpperCase() + ele.slice(1).toLowerCase(); }).join(" ");
         };
@@ -209,12 +223,12 @@
         // into sections:
         // <div class="section"><h2>Physics</h2><div class="course"><h3>[Course]</h3><img src="[THUMBNAIL]"><a href="[URL]">[TITLE]</a></div>...</div>
         // all the styling will be done in CSS later
-        translation = {
+        const translation = {
             "פיזיקה": "physics",
             "מתמטיקה": "maths",
             "מדמ\"ח": "cs",
             "תלפיות": "talpiot",
-        }
+        };
 
         for (const [section_name, courses] of Object.entries(academicVideosArchive)) {
             const section = document.createElement("div");
@@ -253,6 +267,14 @@
                     if (!video_link.innerHTML) video_link.innerText = video.title;
                     video_link.target = "_blank";
                     course_content.appendChild(video_link);
+                    const duration_span = document.createElement("span");
+                    duration_span.className = "duration";
+                    duration_span.innerText = "mm:ss";
+                    getYouTubeDuration(identifier, (formatted, rawSeconds) => {
+                        duration_span.innerText = `${formatted}`;
+                        console.log(`Duration of "${video.title}": ${formatted} (${rawSeconds} seconds)`);
+                    });
+                    video_link.appendChild(duration_span);
                 }
                 course_div.appendChild(course_content);
                 course_title.onclick = () => {

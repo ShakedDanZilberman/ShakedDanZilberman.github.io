@@ -1,4 +1,4 @@
-const redWords = ["(Advanced)"];
+const redWords = ["(Extra)"];
 
 const academicVideosArchive = {
     "פיזיקה": [
@@ -48,7 +48,7 @@ const academicVideosArchive = {
             "course_name": "מת\"פ",
             "videos": [
                 {
-                    "title": "Analytic Continuation and the Zeta Function (Advanced)",
+                    "title": "Analytic Continuation and the Zeta Function (Extra)",
                     "url": "https://youtu.be/CjSKmcWRFzE?si=ya5vg_QdhBM886JV"
                 }
             ]
@@ -73,7 +73,7 @@ const academicVideosArchive = {
                     "url": "https://youtu.be/jSDLfcNhThw?si=b9vJONUy4lwWJPJH"
                 },
                 {
-                    "title": "How RADARs use CFAR to detect targets (Advanced)",
+                    "title": "How RADARs use CFAR to detect targets (Extra)",
                     "url": "https://youtu.be/BEg29UuZk6c?si=cykHtxvr5b-WLPy5"
                 }
             ]

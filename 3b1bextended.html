@@ -388,7 +388,7 @@
         <i id="title">אינטואיציה אקדמית</i>
     </h3>
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSfNOTqKRSEi_SDkfi-ARkQWv5FhClxM10eUsidTzgxnMk4j4g/viewform?usp=dialog"
-        target="_blank" class="add-video">
+        target="_blank" class="add-video" title="הוספת סרטון">
         <div class="add-video-circle">
             <div class="add-video-line"></div>
             <div class="add-video-line"></div>
@@ -564,18 +564,13 @@
                 }
             })
             .then(data => {
-                // remove previous static sections' children:
-                var translation = {
+                const translation = {
                     "פיזיקה": "physics",
                     "מתמטיקה": "maths",
                     "מדמ\"ח": "cs",
                     "מחשבים": "cs",
                     "תלפיות": "talpiot"
                 };
-                Object.keys(translation).forEach(section_name => {
-                    const section = document.getElementById(translation[section_name]);
-                    section.innerHTML = '';
-                });
                 console.log('Previous static sections cleared.');
                 // add the dynamic sections:
                 const backend_translation = {
@@ -586,10 +581,10 @@
                 };
                 Object.keys(backend_translation).forEach(async section_name => {
                     const section = await handleSection(section_name, data[backend_translation[section_name]]);
-                    // apply fade out and fade in animation
-                    section.classList.add('fade-out');
+                    const static_section = document.getElementById(translation[section_name]);
+                    static_section.classList.add('fade-out');
                     await new Promise(resolve => setTimeout(resolve, 600));
-                    document.getElementById(translation[section_name]).replaceWith(section);
+                    static_section.replaceWith(section);
                     await new Promise(resolve => setTimeout(resolve, 600));
                 });
 

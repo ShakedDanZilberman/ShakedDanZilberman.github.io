@@ -275,6 +275,13 @@
                         img.src = "https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico";
                     }
                 }
+
+                // Similarly for Google Docs:
+                if (title.innerText.toLowerCase() == "Google Docs".toLowerCase()) {
+                    for (const img of favicons) {
+                        img.src = "https://www.gstatic.com/images/branding/product/1x/docs_2020q4_48dp.png";
+                    }
+                }
                 
                 document.getElementsByTagName('head')[0].innerHTML += `<link rel="icon" href="${favicons[0].src}">`; // favicon of shortcut matches dest site.
 

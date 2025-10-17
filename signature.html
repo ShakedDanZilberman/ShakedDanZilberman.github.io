@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/256/6436/6436438.png" type="image/x-icon">
+    <title>Talpiot Signature Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            column-gap: 15px;
+            row-gap: 10px;
+            margin: 20px;
+        }
+
+        .bg {
+            filter: invert(100%) blur(3px);
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -3;
+        }
+
+        .transparent {
+            z-index: -2;
+            opacity: 0.2;
+            filter: invert(0%) blur(3px);
+            width: 500px;
+            height: 500px;
+            margin-top: -250px;
+            /* Half the height */
+            margin-left: -250px;
+            /* Half the width */
+            position: absolute;
+            top: 150%;
+            left: 50%;
+        }
+
+        h3 {
+            top: 5%;
+            text-align: center;
+            width: 100%;
+            font-size: 5vw;
+            margin: 0;
+            z-index: 1;
+            text-transform: capitalize;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h4 {
+            margin: 1vw;
+            font-size: 3vw;
+            text-transform: capitalize;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.character {
+            height: 100vh;
+        }
+
+        div.inputs>input {
+            width: 25vw;
+            height: 4vw;
+            margin: 1vw;
+            padding: 0.5vw;
+            border-radius: 0.5vw;
+            border: 0.1vw solid #ccc;
+            font-size: 1.3vw;
+            transition: border-color 0.3s;
+            direction: rtl;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        div.splitscreen {
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            column-gap: 10vw;
+            justify-content: flex-start;
+            align-content: center;
+            flex-wrap: wrap;
+            margin-top: 1vw;
+            margin-right: 5vw;
+        }
+
+        div.signature_result {
+            font-family: 'Guttman-Aharoni', 'Aharoni', 'David', 'Arial', sans-serif;
+            font-size: 2vw;
+        }
+
+        img.signature_img {
+            width: auto;
+            height: 24vw;
+            position: absolute;
+            top: 9.2vw;
+            left: 7vw;
+            z-index: -1;
+            filter: none;
+            border: 1.4vw solid #fff;
+        }
+
+        div.signature_result>#signature_name_container {
+            position: absolute;
+            top: 15vw;
+            right: 56vw;
+            direction: rtl;
+            width: 34vw;
+            height: 7vw;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        div.signature_result>#signature_name {
+            color: #665493;
+            white-space: nowrap;
+            margin-top: auto;
+        }
+
+        div.signature_result>#signature_position_container {
+            position: absolute;
+            top: 23.9vw;
+            right: 56vw;
+            direction: rtl;
+            max-width: 34vw;
+            line-height: 1;
+            white-space: nowrap;
+            height: 4vw;
+            display: flex;
+        }
+
+        div.signature_result>#signature_position {
+            color: #7f7f7f;
+            white-space: nowrap;
+            margin-top: auto;
+        }
+
+        div.signature_result>#signature_mail {
+            position: absolute;
+            top: 27vw;
+            right: 55.5vw;
+            font-size: 2vw;
+            color: #4f4f4f;
+            direction: ltr;
+            max-width: 34vw;
+            text-transform: lowercase;
+        }
+
+        div.signature_result>#signature_phone {
+            position: absolute;
+            top: 30vw;
+            right: 55.5vw;
+            font-size: 2vw;
+            color: #4f4f4f;
+            direction: ltr;
+        }
+
+        .unselectable {
+            -webkit-user-select: none;
+            /* Chrome all / Safari all */
+            -moz-user-select: none;
+            /* Firefox all */
+            -ms-user-select: none;
+            /* IE 10+ */
+            user-select: none;
+            /* Likely future */
+        }
+    </style>
+</head>
+
+<body onresize="updateSignature();">
+    <img src="talpiot_bg.jpg" alt="" class="bg">
+
+
+    <div class="character">
+        <h3 style="margin-top: 20px">מחולל חתימה למייל תלפיות</h3>
+        <div class="splitscreen">
+            <div class="inputs">
+                <input type="text" id="name" placeholder="שם מלא" required oninput="updateSignature();"><br>
+                <input type="text" id="position" placeholder="תפקיד (אפשר להשאיר ריק)" oninput="updateSignature();"><br>
+                <input type="text" id="mail" placeholder="מייל תלפיות" required oninput="updateSignature();"><br>
+                <input type="text" id="phone" placeholder="טלפון" required oninput="updateSignature();"><br>
+            </div>
+
+            <div class="signature_result">
+                <img src="signature_bg.png" alt="Please refresh the page" id="signature_bg"
+                    class="signature_img unselectable">
+                <div id="signature_name_container">
+                    <div id="signature_name">שם מלא</div>
+                </div>
+                <div id="signature_position_container">
+                    <div id="signature_position">תפקיד</div>
+                </div>
+                <h4 id="signature_mail">israel.israeli.00@gmail.com</h4>
+                <h4 id="signature_phone">123-4567890</h4>
+            </div>
+        </div>
+    </div>
+    <script>
+        // randomise background hue:
+        for (let bg of document.getElementsByClassName('bg')) {
+            const newhue = Math.floor(Math.random() * 360);
+            bg.style.filter = `invert(100%) hue-rotate(${newhue}deg) blur(3px)`;
+        }
+
+        const output = document.getElementById('signature_name');
+        const outputContainer = document.getElementById('signature_name_container');
+
+        const output2 = document.getElementById('signature_position');
+        const outputContainer2 = document.getElementById('signature_position_container');
+
+        function resize_to_fit_1() {
+            let fontSize = window.getComputedStyle(output).fontSize;
+            output.style.fontSize = (parseFloat(fontSize) - 1) + 'px';
+
+            console.log('name', fontSize, output.clientWidth, outputContainer.clientHeight)
+
+            if (output.clientHeight >= outputContainer.clientHeight && output.innerText.length > 0) {
+                resize_to_fit_1();
+            }
+        }
+
+        function resize_to_fit_2() {
+            let fontSize = window.getComputedStyle(output2).fontSize;
+            output2.style.fontSize = (parseFloat(fontSize) - 1) + 'px';
+
+            console.log('position', fontSize, output2.clientWidth, outputContainer2.clientWidth);
+
+            const windowWidth = window.innerWidth;
+            const maxWidthInVW = 34; // max-width in vw as defined in CSS
+            const maxWidthInPixels = (maxWidthInVW / 100) * windowWidth;
+
+            if (output2.clientWidth >= maxWidthInPixels && output2.innerText.length > 0 && parseFloat(fontSize) > 0) {
+                resize_to_fit_2();
+            }
+        }
+
+        function updateSignature() {
+            var name = document.getElementById('name').value || 'שם מלא';
+            var position = document.getElementById('position').value;
+            var mail = document.getElementById('mail').value || '[מייל תלפיות]';
+            var phone = document.getElementById('phone').value || 'טלפון';
+
+            document.getElementById('signature_name').innerText = name;
+            document.getElementById('signature_name').style.fontSize = '200px'; // Default font size
+            document.getElementById('signature_name').style.color = '#665493'; // Default color
+            resize_to_fit_1();
+            document.getElementById('signature_position').innerText = position;
+            document.getElementById('signature_position').style.fontSize = '100px'; // Default font size
+            document.getElementById('signature_position').style.color = '#7f7f7f'; // Default color
+            resize_to_fit_2();
+            document.getElementById('signature_mail').innerText = mail;
+            document.getElementById('signature_phone').innerText = phone;
+
+            phone_regex = /[0-9]{3}-[0-9]{7}/;
+            if (!phone.match(phone_regex)) {
+                // extract the numbers from the string
+                phone = phone.replace(/[^0-9]/g, '');
+                // format the phone number as 123-4567890
+                if (phone.length > 3) {
+                    phone = phone.substring(0, 3) + '-' + phone.substring(3);
+                }
+            }
+            document.getElementById('signature_phone').innerText = phone;
+
+            // Save the signature data to localStorage
+            localStorage.setItem('signature_name', name);
+            localStorage.setItem('signature_position', position);
+            localStorage.setItem('signature_mail', mail);
+            localStorage.setItem('signature_phone', phone);
+        }
+
+        function loadSignature() {
+            // Load the signature data from localStorage
+            const name = localStorage.getItem('signature_name') || '';
+            const position = localStorage.getItem('signature_position') || '';
+            const mail = localStorage.getItem('signature_mail') || '';
+            const phone = localStorage.getItem('signature_phone') || '';
+
+            document.getElementById('name').value = name == 'שם מלא' ? '' : name;
+            document.getElementById('position').value = position == 'תפקיד' ? '' : position;
+            document.getElementById('mail').value = mail == 'מייל תלפיות' ? '' : mail;
+            document.getElementById('phone').value = phone == 'טלפון' ? '' : phone;
+
+            updateSignature();
+        }
+
+        setTimeout(loadSignature, 50);
+    </script>
+
+</body>
+
+</html>

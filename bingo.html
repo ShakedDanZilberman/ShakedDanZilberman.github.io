@@ -210,29 +210,6 @@
     <img src="talpiot_bg.jpg" alt="" class="bg">
     <img src="talpiot_bg.jpg" alt="" class="bg lower">
 
-
-    <div class="character">
-        <h3 style="margin-top: 20px">מחולל חתימה למייל תלפיות</h3>
-        <div class="splitscreen">
-            <div class="inputs">
-                <input type="text" id="name" placeholder="שם מלא" required oninput="updateSignature();"><br>
-                <input type="text" id="position" placeholder="תפקיד (אפשר להשאיר ריק)" oninput="updateSignature();"><br>
-                <input type="text" id="mail" placeholder="מייל תלפיות" required oninput="updateSignature();"><br>
-                <input type="text" id="phone" placeholder="טלפון" required oninput="updateSignature();"><br>
-            </div>
-
-            <div class="signature_result">
-                <img src="signature_bg.png" alt="Please refresh the page" id="signature_bg"
-                    class="signature_img unselectable">
-                <div id="signature_name_container">
-                    <div id="signature_name">שם מלא</div>
-                </div>
-                <h4 id="signature_position"></h4>
-                <h4 id="signature_mail">israel.israeli.00@gmail.com</h4>
-                <h4 id="signature_phone">123-4567890</h4>
-            </div>
-        </div>
-    </div>
     <img src="https://upload.wikimedia.org/wikipedia/he/1/14/Minecraft_Logo.png" alt="" class="bg transparent">
     <h3><i id="title">How many can you complete?</i></h3>
     <h4>Talpiot<sup>45</sup></h4>
@@ -322,69 +299,6 @@
             }
         });
 
-
-        const output = document.getElementById('signature_name');
-        const outputContainer = document.getElementById('signature_name_container');
-
-        function resize_to_fit() {
-            let fontSize = window.getComputedStyle(output).fontSize;
-            output.style.fontSize = (parseFloat(fontSize) - 1) + 'px';
-
-            console.log(fontSize, output.clientWidth, outputContainer.clientHeight)
-
-            if (output.clientHeight >= outputContainer.clientHeight) {
-                resize_to_fit();
-            }
-        }
-
-        function updateSignature() {
-            var name = document.getElementById('name').value || 'שם מלא';
-            var position = document.getElementById('position').value;
-            var mail = document.getElementById('mail').value || '[מייל תלפיות]';
-            var phone = document.getElementById('phone').value || 'טלפון';
-
-            document.getElementById('signature_name').innerText = name;
-            document.getElementById('signature_name').style.fontSize = '200px'; // Default font size
-            document.getElementById('signature_name').style.color = '#665493'; // Default color
-            resize_to_fit();
-            document.getElementById('signature_position').innerText = position;
-            document.getElementById('signature_mail').innerText = mail;
-            document.getElementById('signature_phone').innerText = phone;
-
-            phone_regex = /[0-9]{3}-[0-9]{7}/;
-            if (!phone.match(phone_regex)) {
-                // extract the numbers from the string
-                phone = phone.replace(/[^0-9]/g, '');
-                // format the phone number as 123-4567890
-                if (phone.length > 3) {
-                    phone = phone.substring(0, 3) + '-' + phone.substring(3);
-                }
-            }
-            document.getElementById('signature_phone').innerText = phone;
-
-            // Save the signature data to localStorage
-            localStorage.setItem('signature_name', name);
-            localStorage.setItem('signature_position', position);
-            localStorage.setItem('signature_mail', mail);
-            localStorage.setItem('signature_phone', phone);
-        }
-
-        function loadSignature() {
-            // Load the signature data from localStorage
-            const name = localStorage.getItem('signature_name') || '';
-            const position = localStorage.getItem('signature_position') || '';
-            const mail = localStorage.getItem('signature_mail') || '';
-            const phone = localStorage.getItem('signature_phone') || '';
-
-            document.getElementById('name').value = name == 'שם מלא' ? '' : name;
-            document.getElementById('position').value = position == 'תפקיד' ? '' : position;
-            document.getElementById('mail').value = mail == 'מייל תלפיות' ? '' : mail;
-            document.getElementById('phone').value = phone == 'טלפון' ? '' : phone;
-
-            updateSignature();
-        }
-
-        setTimeout(loadSignature, 50);
     </script>
 
 </body>

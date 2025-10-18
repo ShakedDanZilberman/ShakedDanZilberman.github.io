@@ -3,7 +3,7 @@ const academicVideosArchive = {
     "פיזיקה": [
         {
             "course_name": "מכניקה ויחסות",
-            "videos": [{"title": "vid1", "url": "https://youtu.be/bI-FS7aZJpY?si=eq_e0O1GBli2nYpp"}, {"title": "vid2", "url": "https://youtu.be/bmGqhM-tUk4?si=Rs2HTtNdqFFVaN_Y"}, {"title": "vid3", "url": "https://youtu.be/au0QJYISe4c?si=7N7d0ic-W3HGHAcx"}],
+            "videos": [{"title": "Seven Dimensions", "url": "https://youtu.be/bI-FS7aZJpY?si=eq_e0O1GBli2nYpp"}, {"title": "To Master Physics, First Master the Harmonic Oscillator", "url": "https://youtu.be/bmGqhM-tUk4"}, {"title": "We all move at the Speed of Light", "url": "https://youtu.be/au0QJYISe4c"}],
         },
         {
             "course_name": "חשמל ומגנטיות",
@@ -16,15 +16,15 @@ const academicVideosArchive = {
         },
         {
             "course_name": "מכנ\"ל",
-            "videos": [{"title": "vid1", "url": "https://youtu.be/hucEIa5SbXU?si=UhlO-ls3jeZ-L3Wd"}]
+            "videos": [{"title": "Brief overview of Lagrangian Mechanics", "url": "https://youtu.be/hucEIa5SbXU"}]
         },
         {
             "course_name": "חשנ\"ל",
-            "videos": [{"title": "vid1", "url": "https://youtu.be/qdycfWfAtsM?si=7fKuDHrQZYyKt_yJ"}]
+            "videos": [{"title": "Spacetime rotations, understanding Lorentz transformations", "url": "https://youtu.be/qdycfWfAtsM"}]
         },
         {
             "course_name": "קוונטים 1",
-            "videos": [{"title": "vid1", "url": "https://youtu.be/RCIz2hdJQy0?si=9d3x1fhRROdketiA"}]
+            "videos": [{"title": "Intro to the Quantum Harmonic Oscillator in 9 Minutes #PaCE1", "url": "https://youtu.be/RCIz2hdJQy0"}]
         }
     ],
     "מתמטיקה": [
@@ -52,16 +52,16 @@ const academicVideosArchive = {
             "videos": [
                 {
                     "title": "Analytic Continuation and the Zeta Function (Extra)",
-                    "url": "https://youtu.be/CjSKmcWRFzE?si=ya5vg_QdhBM886JV"
+                    "url": "https://youtu.be/CjSKmcWRFzE"
                 },
-                {"title": "vid2", "url": "https://youtu.be/ubVFzZNEphs?si=j0xHT3suk3EE0nxq"}
+                {"title": "My favorite reason why imaginary numbers are real", "url": "https://youtu.be/ubVFzZNEphs"}
             ]
         }
     ],
     "מדמ\"ח": [
         {
             "course_name": "חישוביות",
-            "videos": [{"title": "vid1", "url": "https://youtu.be/92WHN-pAFCs?si=7HwZRZfEZRWhcRDL"}]
+            "videos": [{"title": "Proof That Computers Can't Do Everything (The Halting Problem)", "url": "https://youtu.be/92WHN-pAFCs"}]
         }
     ],
     "תלפיות": [
@@ -70,7 +70,7 @@ const academicVideosArchive = {
             "videos": [
                 {
                     "title": "The beautiful maths which makes 5G faster than 4G... (16-QAM)",
-                    "url": "https://youtu.be/To7Ll5AGboI?si=3ZIqz-iYdTmHHaWB"
+                    "url": "https://youtu.be/To7Ll5AGboI"
                 }
             ]
         },
@@ -79,11 +79,11 @@ const academicVideosArchive = {
             "videos": [
                 {
                     "title": "Phased Arrays - Steering and the Antenna Pattern",
-                    "url": "https://youtu.be/jSDLfcNhThw?si=b9vJONUy4lwWJPJH"
+                    "url": "https://youtu.be/jSDLfcNhThw"
                 },
                 {
                     "title": "How RADARs use CFAR to detect targets (Extra)",
-                    "url": "https://youtu.be/BEg29UuZk6c?si=cykHtxvr5b-WLPy5"
+                    "url": "https://youtu.be/BEg29UuZk6c"
                 }
             ]
         }

@@ -5,6 +5,7 @@ const DISTINCT_THRESHOLD = 110; // What distance (in colour-space) between two c
 const GREYSCALE_READABILITY = 150; // How dark need a background be, to necessitate white text atop it? Smaller means less contrast.
 const IGNORE_FILLERS = 2; // Ignore the whites and blacks of an image. Larger means ignore more colours.
 const SIGNIFICANT_PERCENT = 0.1; // How much should a colour appear in an image, so that it can be considered one of its colours? Lower means less occurrences.
+// NOTE: In the new DS algorithm for colour extraction, most parameters are no longer used. The used parameters are: SCALE, COLOR_COUNT, GREYSCALE_READABILITY only.
 
 function taintParent(x) {
     try {
@@ -28,9 +29,12 @@ function taintParent(x) {
     const data = imageData.data;
     const avg = getAvgColor(data); // algorithm that picks the average colour but more saturated
     x.parentElement.style.backgroundColor = rgbify(avg);
-    
-    let distinctColors = extractDistinctColors(data, avg, COLOR_COUNT, DISTINCT_THRESHOLD); // extracts up to 4 distinct colours from the image.
-    
+
+    let distinctColors = extractDistinctColors(data, COLOR_COUNT); // extracts up to 4 distinct colours from the image.
+
+    // remove all occurrences of [0, 0, 0]
+    distinctColors = distinctColors.filter(color => euclideanDistance(color, [0, 0, 0]) > 10);
+
     try {
         // if the last colour is almost black, make the text on it white.
         if (euclideanDistance(distinctColors[distinctColors.length - 1], [0, 0, 0]) < GREYSCALE_READABILITY) {
@@ -70,6 +74,11 @@ function taintParent(x) {
 }
 
 function rgbify(color) {
+    /* converts an [R, G, B] array into a CSS rgb() string.
+
+    E.g. [255, 0, 0] -> "rgb(255, 0, 0)"
+
+    */
     const [r, g, b] = color;
     return `rgb(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)})`;
 }
@@ -77,6 +86,8 @@ function rgbify(color) {
 function getAvgColor(data) {
     // sums up all the R, G, B values, unless they are brighter than 250 or dimmer than 5,
     // divides by the count (a.k.a taking the average).
+    // Ignores alpha channel.
+    // data is of the form [R, G, B, A, R, G, B, A, ...]
     let totalR = 0;
     let totalG = 0;
     let totalB = 0;
@@ -106,6 +117,10 @@ function euclideanDistance(color1, color2) {
 }
 
 function hue(red, green, blue) {
+    // Calculates the hue of an RGB color.
+    // e.g. hue(255, 0, 0) = 0 (red)
+    //      hue(0, 255, 0) = 120 (green)
+    //      hue(0, 0, 255) = 240 (blue)
     let min = Math.min(Math.min(red, green), blue);
     let max = Math.max(Math.max(red, green), blue);
 
@@ -143,7 +158,7 @@ function colorDistance(color1, color2) {
     return euclideanDistance(color1, color2) * factorAccumulator;
 }
 
-function extractDistinctColors(imageData, avg, N, threshold) {
+function extractDistinctColorsOld(imageData, avg, N, threshold) {
     const pixelCount = imageData.length / 4; // Assuming 4 bytes per pixel (RGBA)
     const countThreshold = SIGNIFICANT_PERCENT * pixelCount;
 
@@ -185,3 +200,111 @@ function extractDistinctColors(imageData, avg, N, threshold) {
     return sortedColors.slice(0, N).map(item => item.color);
 }
 
+
+function extractDistinctColors(imageData, N) {
+    // imageData is of the form [R, G, B, A, R, G, B, A, ...]
+    // N is the number of distinct colors to extract.
+
+    // The algorithm implemented here works like this:
+    // Assign a "random" group number (0 to N-1) to each pixel.
+    // Iteratively,
+    //     For each group, find the average color of the pixels assigned to that group.
+    //     Reassign each pixel to the group whose average color is closest to it.
+
+    const pixelCount = imageData.length / 4; // Assuming RGBA
+    let pixels = [];
+
+    // Step 1: Initialize pixels with random group assignments
+    // Not actually random, but if there are 4 groups, then the top 25% go to group 0, next 25% to group 1, etc.
+    // This is done to ensure reproducibility, and because images often have spatial coherence, so this helps for faster convergence.
+    for (let i = 0; i < pixelCount; i++) {
+        const startIndex = i * 4;
+        const rgb = [imageData[startIndex], imageData[startIndex + 1], imageData[startIndex + 2]];
+        const group = Math.floor((i / pixelCount) * N);
+        pixels.push({ color: rgb, group: group });
+    }
+
+    // Step 2: Iteratively refine group assignments
+    const MAX_ITERATIONS = 10;
+    for (let iter = 0; iter < MAX_ITERATIONS; iter++) {
+        const groupSums = Array.from({ length: N }, () => [0, 0, 0]);
+        const groupCounts = Array.from({ length: N }, () => 0);
+        // Calculate sums and counts for each group
+        for (const pixel of pixels) {
+            const group = pixel.group;
+            groupSums[group][0] += pixel.color[0];
+            groupSums[group][1] += pixel.color[1];
+            groupSums[group][2] += pixel.color[2];
+            groupCounts[group]++;
+        }
+
+        // Calculate new group averages
+        const newGroupAssignments = pixels.map(pixel => {
+            const group = pixel.group;
+            const count = groupCounts[group];
+            if (count === 0) return pixel;
+
+            const avgColor = [
+                Math.floor(groupSums[group][0] / count),
+                Math.floor(groupSums[group][1] / count),
+                Math.floor(groupSums[group][2] / count)
+            ];
+
+            // Find the closest group to the pixel's color
+            const closestGroup = findClosestGroup(pixel.color, groupSums, groupCounts);
+            return { ...pixel, group: closestGroup };
+        });
+
+        // If no pixels changed groups, we can stop early
+        const groupsChanged = newGroupAssignments.some((pixel, i) => pixel.group !== pixels[i].group);
+        if (!groupsChanged) break;
+
+        pixels = newGroupAssignments;
+    }
+
+    // Step 3: Extract the final group colors
+    const finalColors = Array.from({ length: N }, () => [0, 0, 0]);
+    const finalCounts = Array.from({ length: N }, () => 0);
+    for (const pixel of pixels) {
+        const group = pixel.group;
+        finalColors[group][0] += pixel.color[0];
+        finalColors[group][1] += pixel.color[1];
+        finalColors[group][2] += pixel.color[2];
+        finalCounts[group]++;
+    }
+
+    // Average the final colors
+    for (let i = 0; i < N; i++) {
+        if (finalCounts[i] > 0) {
+            finalColors[i][0] = Math.floor(finalColors[i][0] / finalCounts[i]);
+            finalColors[i][1] = Math.floor(finalColors[i][1] / finalCounts[i]);
+            finalColors[i][2] = Math.floor(finalColors[i][2] / finalCounts[i]);
+        }
+    }
+
+    // Return the final colors
+    return finalColors;
+}
+
+function findClosestGroup(color, groupSums, groupCounts) {
+    let closestGroup = 0;
+    let closestDistance = Infinity;
+
+    for (let i = 0; i < groupSums.length; i++) {
+        if (groupCounts[i] === 0) continue;
+
+        const avgColor = [
+            Math.floor(groupSums[i][0] / groupCounts[i]),
+            Math.floor(groupSums[i][1] / groupCounts[i]),
+            Math.floor(groupSums[i][2] / groupCounts[i])
+        ];
+
+        const distance = colorDistance(color, avgColor);
+        if (distance < closestDistance) {
+            closestDistance = distance;
+            closestGroup = i;
+        }
+    }
+
+    return closestGroup;
+}

@@ -1,5 +1,5 @@
 // Customisation and Thresholds
-const SCALE = 4.6; // downscale the image for quicker performence. Larger means faster.
+const SCALE = 10; // downscale the image for quicker performence. Larger means faster.
 const COLOR_COUNT = 4; // max colours in a single blob.
 const DISTINCT_THRESHOLD = 110; // What distance (in colour-space) between two colours makes them distinct from each other?
 const GREYSCALE_READABILITY = 150; // How dark need a background be, to necessitate white text atop it? Smaller means less contrast.

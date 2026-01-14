@@ -307,6 +307,30 @@
             }
         }
 
+        .ellipsis {
+            text-align: center;
+            font-size: 10vw;
+            color: rgba(0, 0, 0, 0.5);
+            margin-top: -7vw;
+            user-select: none;
+            animation: ellipsisAnimation 1.7s infinite;
+        }
+
+        /* Animate the ellipsis, pulsing */
+        @keyframes ellipsisAnimation {
+            0% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
+        }
+
         /* when in phone, reorganise the grid to a single column layout */
         @media only screen and (max-width: 1000px) {
             div#grid {
@@ -573,6 +597,11 @@
         for (const [section_name, courses] of Object.entries(academicVideosArchive)) {
             console.log("Loaded static section:", section_name, courses);
             const section = await handleSection(section_name, courses);
+            // Append the '...' symbol to the end of the static section content
+            const ellipsis = document.createElement("div");
+            ellipsis.classList.add("ellipsis");
+            ellipsis.appendChild(document.createTextNode("..."));
+            section.appendChild(ellipsis);
             document.getElementById(section_name).replaceWith(section);
         }
 

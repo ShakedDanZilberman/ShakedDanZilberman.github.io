@@ -146,6 +146,15 @@
             margin-top: -2vh;
         }
 
+        div.course a.nonvideo-link {
+            margin-top: 0vh !important;
+        }
+
+        div.course a.nonvideo-link::before {
+            content: "🔗";
+            margin-right: 0.5vw;
+        }
+
         div.course a:hover {
             text-decoration: underline;
         }
@@ -451,11 +460,6 @@
                     "course_name": "חשמל ומגנטיות",
                     "videos": [
                         {
-                            "title": "The 4 Maxwell Equations",
-                            "url": "https://youtu.be/hJD8ywGrXks?si=ZxpEZjymqvSd1QKi",
-                            "vid_len": "0h 38m 41s"
-                        },
-                        {
                             "title": "Maxwell's Equations Visualized (Divergence & Curl)",
                             "url": "https://www.youtube.com/watch?v=UzW_jAJzlgI",
                             "vid_len": "0h 8m 44s"
@@ -760,7 +764,26 @@
         async function handleVideo(video) {
             if (!video.url) return; // skip if no url
             var identifier = identifierFromURL(video.url);
-            if (!identifier) return; // skip if not a youtube link
+            if (!identifier) { // if not a youtube link, create elements for a generic link
+                const video_link = document.createElement("a");
+                video_link.href = video.url;
+                // if a title is provided, use "title \n subdomain.domain.tld", otherwise just use the url. Don't use innerHTML to prevent XSS attacks, use innerText instead. Use URL to parse the hostname from the url.
+                if (video.title && video.title != '') {
+                    const urlObj = new URL(video.url);
+                    const titleBold = document.createElement("b");
+                    titleBold.innerText = video.title;
+                    video_link.appendChild(titleBold);
+                    video_link.appendChild(document.createElement("br"));
+                    const urlItalic = document.createElement("i");
+                    urlItalic.innerText = `${urlObj.hostname}`;
+                    video_link.appendChild(urlItalic);
+                } else {
+                    video_link.innerText = `${video.url}`;
+                }
+                video_link.className = "nonvideo-link";
+                video_link.target = "_blank";
+                return [video_link];
+            }; 
 
             if (!video.title) video.title = '';
             if (video.title == '') {
